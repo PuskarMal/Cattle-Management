@@ -17,7 +17,7 @@ const BreedAnalytics = () => {
         formData.append("image", state.imageFile);
 
         const res = await fetch(
-          "https://trisomic-unconsidering-genny.ngrok-free.dev/predict",
+          "http://127.0.0.1:5000/predict",
           { method: "POST", body: formData }
         );
         const data = await res.json();
