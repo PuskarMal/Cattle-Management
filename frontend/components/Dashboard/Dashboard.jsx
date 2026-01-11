@@ -1,37 +1,18 @@
 import React from 'react'
 import { useTranslation } from "react-i18next"; //sujit
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import { ImCheckmark } from "react-icons/im";
 import SpeakerButton from '../Speaker/Speaker'; //Sujit
+import UploadImage from '../UploadImage/UploadImage';
+
 const Dashboard = () => {
-    const fileInputRef = useRef(null);
-    const [imageFile, setImageFile] = useState(null);
-    const [preview, setPreview] = useState(null);
-    const navigate = useNavigate();
-    const { t, i18n } = useTranslation(); //sujit
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        setImageFile(file);
-        setPreview(URL.createObjectURL(file));
-    };
-
-    const analyzeImage = () => {
-        if (!imageFile) {
-            alert("Please upload an image first");
-            return;
-        }
-        navigate("/analytics", { state: { imageFile } });
-    };
+    const { t, i18n } = useTranslation(); //sujit    
     return (
-        <main id="main-content" className="w-full lg:w-3/4 p-8 bg-panel-bg">
+        <main id="main-content" className="w-full lg:w-3/4 p-8 bg-gray-100">
 
 
-            <div className="flex flex-col md:flex-row justify-between items-start mb-10">
+            <div className="flex flex-col md:flex-row justify-between items-start">
                 <div className="space-y-4">
-
-
                     <div className="flex items-center gap-2">
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-900" data-i18n="head">
                             {t("head")}                         {/*Sujit*/}
@@ -40,17 +21,17 @@ const Dashboard = () => {
                     </div>
 
 
-                    <div className="flex flex-col md:flex-row justify-between items-start mb-10">
+                    <div className="flex flex-col md:flex-row justify-between items-start mb-6 md:items-center gap-6">
 
 
                         <div className="md:w-3/5 space-y-5">
 
 
                             <div className="flex items-start gap-2">
-                                <p className="text-gray-700 max-w-xl leading-relaxed text-sm md:text-base" data-i18n="desc">
-                                   {t("longtext")}
+                                <p className="text-gray-700 text-justify max-w-xl leading-relaxed text-sm md:text-base" data-i18n="desc">
+                                    {t("longtext")}
                                 </p>
-                                <button className="opacity-70 text-xl hover:opacity-100" onclick="speakText('desc')"
+                                <button className="opacity-70 text-xl hover:opacity-100" 
                                     title="Listen">🔊</button>
                             </div>
 
@@ -79,7 +60,7 @@ const Dashboard = () => {
                                     <span data-i18n="d1">
                                         {t("f1")}
                                     </span>
-                                    <button className="opacity-70 text-lg hover:opacity-100" onclick="speakText('d1')"
+                                    <button className="opacity-70 text-lg hover:opacity-100" 
                                         title="Listen">🔊</button>
                                 </li>
 
@@ -88,7 +69,7 @@ const Dashboard = () => {
                                     <span data-i18n="d2">
                                         {t("f2")}
                                     </span>
-                                    <button className="opacity-70 text-lg hover:opacity-100" onclick="speakText('d2')"
+                                    <button className="opacity-70 text-lg hover:opacity-100" 
                                         title="Listen">🔊</button>
                                 </li>
 
@@ -97,7 +78,7 @@ const Dashboard = () => {
                                     <span data-i18n="d3">
                                         {t("f3")}
                                     </span>
-                                    <button className="opacity-70 text-lg hover:opacity-100" onclick="speakText('d3')"
+                                    <button className="opacity-70 text-lg hover:opacity-100" 
                                         title="Listen">🔊</button>
                                 </li>
 
@@ -126,139 +107,55 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <UploadImage />
+                <section className="space-y-4 mt-4">
 
 
-                <div>
-                    {!preview && (
-                        <div>
-                            <span className="text-xl md:text-2xl font-semibold mb-6" data-i18n="uploadphoto">{t("uploadphoto")}</span>
-                            <button className="opacity-70 text-xl cursor-pointer hover:opacity-100"
-                                onClick="speakText('uploadphoto')" title="Listen">🔊</button>
-                            <div
-                                className="bg-gray-50 p-8 rounded-xl border-2 border-dashed border-gray-300 transition duration-300 hover:border-primary-green group relative"
-                                onClick={() => fileInputRef.current.click()}>
-
-                                <div class="flex flex-col items-center justify-center text-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        className="h-10 w-10 text-gray-400 group-hover:text-primary-green mb-3"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
-                                        strokeLinecap="round" strokeLinejoin="round">
-                                        <path
-                                            d="M4 14.9V8.5a2.5 2.5 0 0 1 2.5-2.5h11a2.5 2.5 0 0 1 2.5 2.5v11a2.5 2.5 0 0 1-2.5 2.5H6.5a2.5 2.5 0 0 1-2.5-2.5V14.9" />
-                                        <path d="m14 17-2-2-2 2" />
-                                        <path d="M12 15.5V9" />
-                                        <rect x="18" y="3" width="3" height="3" rx="1" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-gray-700" data-i18n="dragdrop">{t("dragdrop")}
-                                    </span>
-                                    <button class="opacity-70 text-xl cursor-pointer hover:opacity-100"
-                                        onclick="speakText('dragdrop')" title="Listen">🔊</button>
-                                    <span class="text-xs text-gray-500 mb-4" data-i18n="limit">{t("limit")}</span>
-                                    <button class="opacity-70 text-xl cursor-pointer hover:opacity-100"
-                                        onclick="speakText('limit')" title="Listen">🔊</button>
-                                    <span
-                                        class="py-2 px-4 text-sm cursor-pointer font-semibold rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition duration-150"
-                                    >
-                                        {t("upload")}
-                                    </span>
-                                    <button class="opacity-70 text-xl cursor-pointer hover:opacity-100"
-                                        onclick="speakText('upload')" title="Listen">🔊</button>
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        onChange={handleFileChange}
-                                    />
-                                </div>
-
-
-                                <div class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 cursor-pointer"
-                                    title="Maximum file size is 200MB">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                                        strokeLinejoin="round">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                                        <path d="M12 17h.01" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>)}
-
-                    {preview && (
-                        <img
-                            src={preview}
-                            alt="Preview"
-                            className="max-h-64 rounded-lg shadow-md"
-                        />
-                    )}
-
-
-
-                    <span id="analyze-button" data-i18n="analysis"
-                        class="mt-6 w-full py-3 flex cursor-pointer items-center bg-slate-600 justify-center rounded-lg bg-primary-green hover:bg-secondary-green transition duration-200 text-white font-bold shadow-xl hover:shadow-2xl"
-                        onClick={analyzeImage}>
-
-                        {t("analyze")}
-                    </span>
-                    <button class="opacity-70 text-xl cursor-pointer hover:opacity-100"
-                        onclick="speakText('analysis')" title="Listen">🔊</button>
-
-
-
-                    <div id="feedback-message" class="mt-4 text-sm text-center text-gray-600 hidden"></div>
-
-
-                </div>
-                <section class="mt-12 space-y-4">
-
-
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-semibold text-gray-800 cursor-pointer">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xl font-semibold text-gray-800 cursor-pointer">
                             {t("recentactivity")}
                         </h2>
-                        <a href="/activity.html" class="text-sm cursor-pointer text-primary-green hover:underline">
+                        <a href="/activity.html" className="text-sm cursor-pointer text-primary-green hover:underline">
                             {t("viewall")}
                         </a>
                     </div>
 
 
-                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm divide-y">
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm divide-y">
 
 
-                        <div class="p-4 flex items-start gap-3">
-                            <span class="text-green-600 text-lg">➕</span>
+                        <div className="p-4 flex items-start gap-3">
+                            <span className="text-green-600 text-lg">➕</span>
                             <div>
-                                <p class="text-sm text-gray-800">
+                                <p className="text-sm text-gray-800">
                                     {t("newanimalregistered")}
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p className="text-xs text-gray-500 hover-underline cursor-pointer hover:text-blue-500">
                                     C100669110
                                 </p>
                             </div>
                         </div>
 
-                        <div class="p-4 flex items-start gap-3">
-                            <span class="text-blue-600 text-lg">📷</span>
+                        <div className="p-4 flex items-start gap-3">
+                            <span className="text-blue-600 text-lg">📷</span>
                             <div>
-                                <p class="text-sm text-gray-800">
+                                <p className="text-sm text-gray-800">
                                     {t("animalidentified")}
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p className="text-xs text-gray-500">
                                     C100578424
                                 </p>
                             </div>
                         </div>
 
-                        <div class="p-4 flex items-start gap-3">
-                            <span class="text-purple-600 text-lg">🧬</span>
+                        <div className="p-4 flex items-start gap-3">
+                            <span className="text-purple-600 text-lg">🧬</span>
                             <div>
-                                <p class="text-sm text-gray-800">
+                                <p className="text-sm text-gray-800">
                                     {t("genetictestcompleted")}
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p className="text-xs text-gray-500">
                                     M500677384
                                 </p>
                             </div>
@@ -267,8 +164,9 @@ const Dashboard = () => {
                     </div>
                 </section>
 
-
             </div>
+            
+
         </main>
     )
 }
