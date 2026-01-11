@@ -72,4 +72,4 @@ const BreedSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Breed", BreedSchema);
+module.exports = mongoose.model("breed_master", BreedSchema);
