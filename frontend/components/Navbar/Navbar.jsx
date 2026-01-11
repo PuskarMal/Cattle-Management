@@ -16,14 +16,14 @@ const Navbar = () => {
 
         {/* Navigation Links */}
         <div className="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
-          <a href="/" className="hover:text-green-400 transition">{t("nav.home")}</a>
-          <a href="/register" className="hover:text-green-400 transition">{t("nav.register")}</a>
-          <a href="/my-cattle" className="hover:text-green-400 transition">{t("nav.myCattle")}</a>
-          <a href="/identify" className="hover:text-green-400 transition">{t("nav.identify")}</a>
-          <a href="/marketplace" className="hover:text-green-400 transition">{t("nav.marketplace")}</a>
-          <a href="/reports" className="hover:text-green-400 transition">{t("nav.reports")}</a>
-          <a href="/voice" className="hover:text-green-400 transition">{t("nav.voice")}</a>
-          <a href="/help" className="hover:text-green-400 transition">{t("nav.help")}</a>
+          <a href="/" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.home")}</a>
+          <a href="/register-cattle" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.register")}</a>
+          <a href="/my-cattle" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.myCattle")}</a>
+          <a href="/identify" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.identify")}</a>
+          <a href="/marketplace" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.marketplace")}</a>
+          <a href="/reports" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.reports")}</a>
+          <a href="/voice" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.voice")}</a>
+          <a href="/help" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.help")}</a>
         </div>
 
         {/* Right Controls */}
