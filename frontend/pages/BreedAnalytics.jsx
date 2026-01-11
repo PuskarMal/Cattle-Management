@@ -28,7 +28,7 @@ const BreedAnalytics = () => {
         );
         const breedDetails = await breedDetailsRes.json();
         setDetails(breedDetails);
-        
+
       } catch (err) {
         console.error("Prediction error:", err);
       } finally {
@@ -101,21 +101,21 @@ const BreedAnalytics = () => {
                   <span>{result.top_predictions[0].confidence}%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
-  <div
-    className="h-3 bg-green-500 rounded-full transition-all"
-    style={{ width: `${result.top_predictions[0].confidence}%` }}
-  />
-  <div className="mt-4">
-    <TopPrediction predictions={result.top_predictions} />
-  </div>
-</div>
+                  <div
+                    className="h-3 bg-green-500 rounded-full transition-all"
+                    style={{ width: `${result.top_predictions[0].confidence}%` }}
+                  />
+                  <div className="mt-4">
+                    <TopPrediction predictions={result.top_predictions} />
+                  </div>
+                </div>
 
               </div>
 
               <p className="text-sm text-gray-500">
                 {result.description}
               </p>
-              
+
             </>
           )}
         </div>
@@ -147,36 +147,36 @@ const BreedAnalytics = () => {
           {/* DISEASES */}
           <div className="grid grid-cols-2 gap-8">
             <div>
-            <h3 className="font-semibold text-gray-800 mb-2">
-              Recommended Fodder
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {details.recommended_feed?.map((f, i) => (
-                <span
-                  key={i}
-                  className="px-3 py-1 text-md rounded-full bg-green-50 text-green-700 border border-red-200"
-                >
-                  {f}
-                </span>
-              ))}
+              <h3 className="font-semibold text-gray-800 mb-2">
+                Recommended Fodder
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {details.recommended_feed?.map((f, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 text-md rounded-full bg-green-50 text-green-700 border border-red-200"
+                  >
+                    {f}
+                  </span>
+                ))}
               </div>
             </div>
             <div>
-            <h3 className="font-semibold text-gray-800 mb-2">
-              Common Diseases
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {details.common_diseases?.map((d, i) => (
-                <span
-                  key={i}
-                  className="px-3 py-1 text-md rounded-full bg-red-50 text-red-700 border border-red-200"
-                >
-                  {d}
-                </span>
-              ))}
+              <h3 className="font-semibold text-gray-800 mb-2">
+                Common Diseases
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {details.common_diseases?.map((d, i) => (
+                  <span
+                    key={i}
+                    className="px-3 py-1 text-md rounded-full bg-red-50 text-red-700 border border-red-200"
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
             </div>
-            </div>
-            
+
           </div>
         </div>
       )}
