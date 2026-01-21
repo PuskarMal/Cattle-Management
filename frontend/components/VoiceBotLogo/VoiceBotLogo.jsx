@@ -1,5 +1,5 @@
 import React from 'react'
-import chatbot from '../../public/chatbot.png'
+import chatbot from '/chatbot.png'
 import { useNavigate } from 'react-router-dom'
 
 const VoiceBotLogo = () => {
