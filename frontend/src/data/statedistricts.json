@@ -1,0 +1,25 @@
+{
+  "West Bengal": [
+    "Kolkata",
+    "Howrah",
+    "Hooghly",
+    "North 24 Parganas",
+    "South 24 Parganas",
+    "Nadia",
+    "Bardhaman"
+  ],
+  "Maharashtra": [
+    "Mumbai",
+    "Pune",
+    "Nagpur",
+    "Nashik",
+    "Aurangabad"
+  ],
+  "Uttar Pradesh": [
+    "Lucknow",
+    "Kanpur",
+    "Varanasi",
+    "Prayagraj",
+    "Noida"
+  ]
+}
