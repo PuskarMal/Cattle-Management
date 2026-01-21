@@ -40,7 +40,7 @@ const TopPrediction = ({ predictions }) => {
   };
 
   return (
-    <div className="h-40 w-full bg-white p-4 rounded-xl  shadow-sm">
+    <div className="h-50 w-full bg-white p-8 rounded-xl  shadow-sm">
       <h3 className="text-sm font-semibold text-gray-600 mb-2">
         Top 5 Breed Predictions
       </h3>
