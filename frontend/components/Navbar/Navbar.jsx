@@ -22,7 +22,7 @@ const Navbar = () => {
           <a href="/identify" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.identify")}</a>
           <a href="/marketplace" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.marketplace")}</a>
           <a href="/reports" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.reports")}</a>
-          <a href="/voice" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.voice")}</a>
+          <a href="/voicebot" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.voice")}</a>
           <a href="/help" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.help")}</a>
         </div>
 
@@ -62,9 +62,9 @@ const Navbar = () => {
           </select>
 
           {/* Profile Icon */}
-          <button
+          <a
             className="hidden md:flex items-center justify-center h-9 w-9 rounded-full bg-gray-100 hover:bg-gray-200 transition"
-            aria-label="User profile"
+            aria-label="User profile" href="/profile"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none"
               viewBox="0 0 24 24" stroke="currentColor">
@@ -73,7 +73,7 @@ const Navbar = () => {
                 7.5 5.1 7.5 7.5 9.3 12 12 12zm0 2
                 c-3.3 0-9 1.7-9 5v2h18v-2c0-3.3-5.7-5-9-5z" />
             </svg>
-          </button>
+          </a>
 
         </div>
       </div>
