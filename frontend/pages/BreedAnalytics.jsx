@@ -24,7 +24,7 @@ const BreedAnalytics = () => {
         setResult(data);
 
         const breedDetailsRes = await fetch(
-          `http://localhost:3000/predict/fetch_details/${data.breed}`
+          `http://localhost:3000/predict/fetch_details/${data.top_predictions[0].breed}`
         );
         const breedDetails = await breedDetailsRes.json();
         setDetails(breedDetails);
@@ -42,7 +42,7 @@ const BreedAnalytics = () => {
   if (!state?.imageFile) {
     return (
       <p className="text-center mt-20 text-gray-500">
-        No image provided. Please upload an image first.
+        {t("warning")}
       </p>
     );
   }
@@ -52,9 +52,9 @@ const BreedAnalytics = () => {
 
       {/* HEADER */}
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h2 className="text-xl font-semibold mb-4 border-b pb-2">
           Breed Analytics
-        </h1>
+        </h2>
         <span className="text-sm text-gray-500">
           AI-powered identification
         </span>
@@ -74,7 +74,7 @@ const BreedAnalytics = () => {
         </div>
 
         {/* ANALYSIS */}
-        <div className="bg-white p-6 rounded-xl shadow border space-y-4">
+        <div className="bg-white p-6 rounded-xl shadow border space-y-4 h-100">
           <h2 className="text-lg font-semibold">Analysis Result</h2>
 
           {loading && (
@@ -105,7 +105,7 @@ const BreedAnalytics = () => {
                     className="h-3 bg-green-500 rounded-full transition-all"
                     style={{ width: `${result.top_predictions[0].confidence}%` }}
                   />
-                  <div className="mt-4">
+                  <div className="mt-2">
                     <TopPrediction predictions={result.top_predictions} />
                   </div>
                 </div>
