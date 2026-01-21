@@ -9,8 +9,9 @@ import CattleProfile from '../pages/CattleProfile'
 import VoiceBot from '../pages/VoiceBot'
 import VoicebotLogo from '../components/VoiceBotLogo/VoiceBotLogo'
 import Marketplace from '../pages/Marketplace'
-
+import Biometric from '../pages/Biometric'
 import Home from '../pages/Home'
+import Profile from '../pages/Profile'
 
 import "./i18n";
 
@@ -23,9 +24,12 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/analytics" element={<BreedAnalytics />} />
         <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/cattle-profile" element={<CattleProfile />} />
+        <Route path="/cattle-profile/:id" element={<CattleProfile />} />
         <Route path="/register-cattle" element={<RegisterCattle />} />
         <Route path="/voicebot" element={<VoiceBot />} />
+        <Route path="/identify" element={<Biometric/>}/>
+        <Route path="/identify/:id" element={<Biometric/>}/>
+        <Route path="/profile" element={<Profile/>}/>
       </Routes>
       <VoicebotLogo/>
       <Footer />
