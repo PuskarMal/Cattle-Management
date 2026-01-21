@@ -6,7 +6,8 @@ import SpeakerButton from '../Speaker/Speaker'; //Sujit
 import UploadImage from '../UploadImage/UploadImage';
 
 const Dashboard = () => {
-    const { t, i18n } = useTranslation(); //sujit    
+    const { t, i18n } = useTranslation(); //sujit  
+     
     return (
         <main id="main-content" className="w-full lg:w-3/4 p-8 bg-gray-100">
 
@@ -31,8 +32,7 @@ const Dashboard = () => {
                                 <p className="text-gray-700 text-justify max-w-xl leading-relaxed text-sm md:text-base" data-i18n="desc">
                                     {t("longtext")}
                                 </p>
-                                <button className="opacity-70 text-xl hover:opacity-100" 
-                                    title="Listen">🔊</button>
+                                <SpeakerButton textKey="longtext" />
                             </div>
 
 
@@ -108,7 +108,21 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
                 <UploadImage />
+                <span id="analyze-button" data-i18n="analysis"
+                    className="mt-6 w-full py-3 border-2 flex cursor-pointer items-center text-white bg-cyan-900 hover:bg-cyan-700 border-sky-600 justify-center rounded-lg transition duration-200 font-semibold shadow-xl hover:shadow-2xl"
+                    >
+
+                    {t("analyze")}
+                </span>
+                <button className="opacity-70 text-xl cursor-pointer hover:opacity-100"
+                    title="Listen">🔊</button>
+
+
+
+                <div id="feedback-message" className="mt-4 text-sm text-center text-gray-600 hidden"></div>
+                </div>
                 <section className="space-y-4 mt-4">
 
 
