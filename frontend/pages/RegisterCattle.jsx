@@ -1,150 +1,678 @@
-import React, { useState } from "react";
-import UploadImage from "../components/UploadImage/UploadImage";
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios"
+import statedistricts from "../src/data/statedistricts.json";
+
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 const RegisterCattle = () => {
+  const [dob, setDob] = useState("");
+  const [submit, setSubmit] = useState(false);
+  const [analysisMode, setAnalysisMode] = useState(false);
+  const [result, setResult] = useState(null);
+  const [showOverlay, setShowOverlay] = useState(true);
+  const [breedDetails, setBreedDetails] = useState(null);
+  const [state, setState] = useState("");
+  const [district, setDistrict] = useState("");
   const [formData, setFormData] = useState({
-    species: "",
-    breed: "",
-    gender: "",
-    dob: "",
-    avgMilkYield: "",
-    vaccinationStatus: "",
-    location: "",
+    animal_tag_id: "",
+    name: "",
+    species: "Cow",
+    breed_name: "",
+    age_in_months: "",
+    gender: "Female",
+    state: "",
+    district: "",
+    owner_id: "",
+    address: "",
+    milk_production: {
+      average_yield_lpd: "",
+      fat_percentage: ""
+    },
+    health_status: {
+      current_condition: "",
+      last_vaccination_date: ""
+    },
+    unique_id: "",
+    image_id: ""
   });
 
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const breeds = [
+    "Gir",
+    "Sahiwal",
+    "Alambadi",
+    "Amritmahal",
+    "Ayrshire",
+    "Banni",
+    "Bargur",
+    "Bhadwari",
+    "Brown_Swiss",
+    "Dangi",
+    "Deoni",
+    "Guernsey",
+    "Hallikar",
+    "Hariana",
+    "Holstein_Friesian",
+    "Jaffarabadi",
+    "Jersey",
+    "Kangayam",
+    "Kankrej",
+    "Kasargod",
+    "Kenkatha",
+    "Kherigarh",
+    "Khillari",
+    "Krishna_Valley",
+    "Malnad_gidda",
+    "Mehsana",
+    "Murrah",
+    "Nagori",
+    "Nagpuri",
+    "Nilli_Ravi",
+    "Nimari",
+    "Ongole",
+    "Pulikulam",
+    "Rathi",
+    "Red_Dane",
+    "Surti",
+    "Red_Sindhi",
+    "Tharparkar",
+    "Toda",
+    "Umblacherry",
+    "Vechur"
+  ];
+
+  const calculateAgeInMonths = (dob) => {
+    if (!dob) return "";
+    const birthDate = new Date(dob);
+    const today = new Date();
+
+    let months =
+      (today.getFullYear() - birthDate.getFullYear()) * 12 +
+      (today.getMonth() - birthDate.getMonth());
+
+    return months >= 0 ? months : "";
+  };
+
+
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name.startsWith("milk_")) {
+      setFormData((prev) => ({
+        ...prev,
+        milk_production: {
+          ...prev.milk_production,
+          [name.replace("milk_", "")]: value
+        }
+      }));
+
+    }
+    else if (name.startsWith("health_")) {
+      setFormData((prev) => ({
+        ...prev,
+        health_status: {
+          ...prev.health_status,
+          [name.replace("health_", "")]: value
+        }
+      }));
+    }
+    else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  }
+  const handleStateChange = (e) => {
+    const selectedState = e.target.value;
+    setState(selectedState);
+    setDistrict("");
+
+    setFormData((prev) => ({
+      ...prev,
+      state: selectedState,
+      district: ""
+    }));
+  };
+  const handleDistrictChange = (e) => {
+    const selectedDistrict = e.target.value;
+    setDistrict(selectedDistrict);
+
+    setFormData((prev) => ({
+      ...prev,
+      district: selectedDistrict
+    }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const data = new FormData();
-    Object.keys(formData).forEach((key) =>
-      data.append(key, formData[key])
+    data.append("animal_tag_id", formData.animal_tag_id);
+    data.append("name", formData.name);
+    data.append("species", formData.species);
+    data.append("breed_name", formData.breed_name);
+    data.append("age_in_months", formData.age_in_months);
+    data.append("gender", formData.gender);
+    data.append("state", formData.state);
+    data.append("district", formData.district);
+    data.append("address",formData.address)
+    data.append("owner_id",formData.owner_id)
+    // ✅ STRINGIFY nested objects
+    data.append(
+      "milk_production",
+      JSON.stringify(formData.milk_production)
     );
-    data.append("image", image);
+
+    data.append(
+      "health_status",
+      JSON.stringify(formData.health_status)
+    );
+
+    // Append image
+    if (imageFile) {
+      data.append("image", imageFile);
+    }
+
+    const req = await axios.post("http://localhost:3000/register-cattle", data,
+
+
+    );
+    setFormData((prev) => ({
+      ...prev,
+      unique_id: req.data.unique_id
+    }));
+    setSubmit(true);
+
+
+
+  };
+  const downloadReport = async (unique_id) => {
+
+    const response = await fetch(
+      `http://localhost:3000/download-report/${unique_id}`
+    );
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${unique_id}_report.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+  const fileInputRef = useRef(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const analyzeImage = async () => {
+    if (!imageFile) {
+      alert("Please upload an image first");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", imageFile);
 
     try {
-      const res = await fetch("http://localhost:5000/register-cattle", {
+      const res = await fetch("http://127.0.0.1:5000/predict", {
         method: "POST",
-        body: data,
+        body: formData
       });
 
-      const result = await res.json();
-      alert("Cattle registered successfully!");
-      console.log(result);
+      const data = await res.json();
+
+      setResult(data);
+
+      const breedDetailsRes = await fetch(
+        `http://localhost:3000/predict/fetch_details/${data.top_predictions[0].breed}`
+      );
+      const breedDetail = await breedDetailsRes.json();
+      setBreedDetails(breedDetail.description);
+
     } catch (err) {
-      alert("Registration failed");
+      console.error("Analyze image failed:", err);
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImageFile(file);
+    setPreview(URL.createObjectURL(file));
+  };
+  const handleBiometric = (unique_id) => {
+    navigate(`/identify/${unique_id}`
+
+    );
+  };
+
+  // 🔹 Cleanup preview URL (important)
+  useEffect(() => {
+    return () => preview && URL.revokeObjectURL(preview);
+  }, [preview]);
+
+
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
-        Register Cattle
-      </h1>
-      <UploadImage/>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-xl p-6 space-y-6"
-      >
-        {/* Species & Breed */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <select
-            name="species"
-            onChange={handleChange}
-            className="border rounded-lg p-3"
-            required
+
+    <main className="max-w-5xl mx-auto p-6">
+      {!submit && (
+        <div>
+          <h2 className="text-xl font-semibold mb-4 border-b pb-2">
+          Register New Cattle
+        </h2>
+
+          <div>
+            <div className="flex items-center gap-2 mt-10">
+              <span className="text-lg font-semibold text-gray-700 mb-4">{t("uploadphoto")}</span>
+              <button onClick={() => speakText("uploadphoto")} className="opacity-70 text-xl">🔊</button>
+            </div>
+
+            {!preview && (
+              <div
+                className="bg-gray-50 p-8 rounded-xl border-2 border-dashed border-gray-300 hover:border-primary-green cursor-pointer"
+                onClick={() => fileInputRef.current.click()}
+              >
+                <div className="flex flex-col items-center text-center">
+                  <svg className="h-10 w-10 text-gray-400 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M4 14.9V8.5a2.5 2.5 0 0 1 2.5-2.5h11a2.5 2.5 0 0 1 2.5 2.5v11a2.5 2.5 0 0 1-2.5 2.5H6.5a2.5 2.5 0 0 1-2.5-2.5V14.9" />
+                    <path d="m14 17-2-2-2 2" />
+                    <path d="M12 15.5V9" />
+                  </svg>
+
+                  <p className="text-sm font-medium text-gray-700">{t("dragdrop")}</p>
+                  <p className="text-xs text-gray-500 mb-4">{t("limit")}</p>
+
+                  <button
+                    type="button"
+                    className="py-2 px-4 text-sm font-semibold rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                  >
+                    {t("upload")}
+                  </button>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                </div>
+              </div>
+            )}
+
+            {preview && (
+              <div className="relative overflow-hidden h-[380px] mt-6 rounded-2xl">
+
+                {/* ORIGINAL PREVIEW */}
+                <div
+                  className={`absolute inset-0 transition-transform duration-700 ease-in-out
+      ${analysisMode ? "-translate-x-full" : "translate-x-0"}`}
+                >
+                  <div className="h-full bg-gray-50 p-6 rounded-2xl border flex flex-col justify-center items-center gap-4">
+                    <img
+                      src={preview}
+                      className="h-44 rounded-xl shadow-md object-contain"
+                    />
+
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => fileInputRef.current.click()}
+                        className="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 hover:bg-gray-300"
+                      >
+                        Change Image
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setShowOverlay(true);
+                          analyzeImage();
+                          setAnalysisMode(true);
+                          setTimeout(() => setShowOverlay(false), 1800);
+                        }}
+                        className="px-4 py-2 text-sm font-semibold rounded-full
+                       bg-cyan-900 text-white hover:bg-cyan-700"
+                      >
+                        Analyze Image
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ANALYSIS PANEL */}
+                <div
+                  className={`absolute inset-0 transition-transform duration-700 ease-in-out
+      ${analysisMode ? "translate-x-0" : "translate-x-full"}`}
+                >
+                  <div className="relative h-full rounded-2xl overflow-hidden">
+
+                    {/* BLURRED BACKGROUND */}
+                    <div
+                      className="absolute inset-0 scale-110 blur-xl"
+                      style={{
+                        backgroundImage: `url(${preview})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center"
+                      }}
+                    />
+
+                    {/* DARK OVERLAY */}
+                    <div className="absolute inset-0 bg-black/60" />
+
+                    {/* CENTERED IMAGE */}
+                    <div className="relative z-10 flex flex-col items-center justify-center h-full">
+                      <img
+                        src={preview}
+                        className="h-52 rounded-xl shadow-2xl border border-white/20"
+                      />
+                    </div>
+
+                    {/* LOADING OVERLAY (TIMED) */}
+                    {(showOverlay || !result) && (
+                      <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
+                        <div className="w-2/3 h-2 bg-white/20 rounded-full overflow-hidden">
+                          <div className="h-full w-[75%] bg-cyan-400 animate-progress" />
+                        </div>
+                        <p className="mt-3 text-sm text-white/80">
+                          Fetching the results…
+                        </p>
+                      </div>
+                    )}
+
+                    {/* RESULT OVERLAY */}
+                    {result && !showOverlay && (
+                      <div className="absolute bottom-6 left-6 right-6 z-30 text-white space-y-2">
+                        
+                      <div className="flex justify-between">
+                        <p className="text-2xl font-bold tracking-wide">
+                          {result.top_predictions?.[0]?.breed || "Unknown Breed"}
+                        </p>
+                        <p className="font-medium">
+
+                          <span
+                            className={`inline-block px-3 py-1 rounded-full text-lg font-semibold
+                            ${result.top_predictions?.[0]?.confidence >= 0.8
+                                ? "bg-green-500/20 text-green-400"
+                                : result.top_predictions?.[0]?.confidence >= 0.5
+                                  ? "bg-yellow-500/20 text-yellow-400"
+                                  : "bg-red-500/20 text-red-400"
+                              }`}
+                          >
+                            Confidence: {result.top_predictions?.[0]?.confidence.toFixed(2)}
+                          </span>
+                        </p>
+                      </div>
+
+                        <p className="text-md text-white/80 leading-snug">
+                          {breedDetails || "Breed characteristics and regional traits."}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+            )}
+
+          </div>
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 space-y-6 mt-8"
           >
-            <option value="">Select Species</option>
-            <option value="Cow">Cow</option>
-            <option value="Buffalo">Buffalo</option>
-          </select>
+            {/* Basic Info */}
+            <section>
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">
+                Basic Information
+              </h2>
 
-          <input
-            type="text"
-            name="breed"
-            placeholder="Breed"
-            className="border rounded-lg p-3"
-            onChange={handleChange}
-            required
-          />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div> {/* Animal Tag ID */}
+                  <p className="pb-2">Ear Tag ID</p>
+                  <input
+                    name="animal_tag_id"
+                    placeholder="Ear Tag ID"
+                    className="w-full p-2 border border-gray-300 rounded-lg
+         focus:outline-none focus:ring-1 focus:ring-green-200
+         bg-white text-gray-800"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div> {/* Name */}
+                  <p className="pb-2">Name</p>
+                  <input
+                    name="name"
+                    placeholder="Optional"
+                    className="w-full p-2 border border-gray-300 rounded-lg
+         focus:outline-none focus:ring-1 focus:ring-green-200
+         bg-white text-gray-800"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div> {/* Species */}
+                  <p className="pb-2">Species Name</p>
+                  <select
+                    name="species"
+                    className="w-full p-2 border border-gray-300 rounded-lg
+         focus:outline-none focus:ring-1 focus:ring-green-200
+         bg-white text-gray-800"
+                    onChange={handleChange} defaultValue="Select Species" required
+                  >
+                    <option>Cow</option>
+                    <option>Buffalo</option>
+                  </select>
+                </div>
+                <div> {/* Breed Name */}
+                  <p className="pb-2">Breed Name</p>
+                  <input
+                    list="breedList"
+                    name="breed_name"
+                    placeholder="Type or select breed"
+                    className="w-full p-2 border border-gray-300 rounded-lg
+         focus:outline-none focus:ring-1 focus:ring-green-200
+         bg-white text-gray-800"
+                    onChange={handleChange}
+                    required
+                  />
+
+                  <datalist id="breedList">
+                    {breeds.map((breed) => (
+                      <option key={breed} value={breed} />
+                    ))}
+                  </datalist>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* DOB and Age */}
+                  <p>Date of Birth</p>
+                  <input
+                    type="date"
+                    value={dob}
+                    onChange={(e) => {
+                      const selectedDob = e.target.value;
+                      setDob(selectedDob);
+
+                      const ageMonths = calculateAgeInMonths(selectedDob);
+
+                      setFormData((prev) => ({
+                        ...prev,
+                        age_in_months: ageMonths
+                      }));
+                    }}
+                    required
+                  />
+
+                  <p>Age (months)</p>
+                  <input
+                    type="number"
+                    name="age_in_months"
+                    value={calculateAgeInMonths(dob)}
+                    className="w-full px-4 border border-gray-300 rounded-lg
+              focus:outline-none focus:ring-1 focus:ring-green-200
+              bg-white text-gray-800 cursor-not-allowed"
+                    readOnly
+                    placeholder=""
+                  />
+                </div>
+                <div> {/* Gender */}
+                  <p className="pb-2">Gender</p>
+                  <select
+                    name="gender"
+                    className="w-full p-2 border border-gray-300 rounded-lg
+         focus:outline-none focus:ring-2 focus:ring-primary-green
+         bg-white text-gray-800"
+                    onChange={handleChange}
+                  >
+                    <option>Female</option>
+                    <option>Male</option>
+                  </select>
+                </div>
+                <div> {/* State */}
+                  <p className="pb-2">State</p>
+                  <select
+                    value={state}
+                    onChange={handleStateChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg
+         focus:outline-none focus:ring-1 focus:ring-green-200
+         bg-white text-gray-800"
+                  >
+                    <option value="">Select State</option>
+                    {Object.keys(statedistricts).map((stateName) => (
+                      <option key={stateName} value={stateName}>
+                        {stateName}
+                      </option>
+                    ))}
+                  </select>
+
+
+                </div>
+                <div> {/* District */}
+                  <p className="pb-2">District</p>
+                  <select
+                    value={district}
+                    onChange={handleDistrictChange}
+                    disabled={!state}
+                    className="w-full p-2 border border-gray-300 rounded-lg
+         focus:outline-none focus:ring-1 focus:ring-green-200
+         bg-white text-gray-800"
+                  >
+                    <option value="">Select District</option>
+                    {state &&
+                      statedistricts[state].map((dist) => (
+                        <option key={dist} value={dist}>
+                          {dist}
+                        </option>
+                      ))}
+                  </select>
+
+                </div>
+              </div>
+            </section>
+            {/* Owner Info */}
+            <section>
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">
+                Owner Information
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div> {/* Owner AADHAR ID */}
+                  <p className="pb-2">Owner AADHAR ID</p>
+                  <input
+                    name="owner_id"
+                    placeholder="Owner AADHAR ID"
+                    className="w-full p-2 border border-gray-300 rounded-lg
+         focus:outline-none focus:ring-1 focus:ring-green-200
+         bg-white text-gray-800"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              
+                <div>
+                  <p className="pb-2">Current Address</p>
+                  <input
+                    name="address"
+                    placeholder="Current Address of the Cattle"
+                    className="w-full p-2 border border-gray-300 rounded-lg
+         focus:outline-none focus:ring-1 focus:ring-green-200
+         bg-white text-gray-800"
+                    onChange={handleChange}
+                  />
+                </div>
+
+              </div>
+            </section>
+            {/* Milk Production */}
+            <section>
+              <h2 className="text-lg font-semibold text-gray-700 mb-4"
+              >
+                Milk Production
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="pb-2">Average Milk Yield (LPD)</p>
+                  <input
+                    name="milk_average_yield_lpd"
+                    type="number"
+                    step="0.1"
+                    placeholder="Litres of milk produced daily"
+                    className="w-full p-2 border border-gray-300 rounded-lg
+              focus:outline-none focus:ring-1 focus:ring-green-200
+              bg-white text-gray-800"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="pb-2">Fat Percentage (%)</p>
+                  <input
+                    name="milk_fat_percentage"
+                    type="number"
+                    step="0.1"
+                    placeholder="Percentage of fat in milk"
+                    className="w-full p-2 border border-gray-300 rounded-lg
+              focus:outline-none focus:ring-1 focus:ring-green-200
+            bg-white text-gray-800"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </section>
+            {/* Submit */}
+            {!submit && (
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="cursor-pointer px-6 py-2 rounded-lg  text-white bg-cyan-900 hover:bg-cyan-700 border-sky-600 font-semibold hover:bg-secondary-green transition"
+                >
+                  Register Cattle
+                </button>
+              </div>
+            )}
+          </form>
         </div>
-
-        {/* Gender & DOB */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <select
-            name="gender"
-            onChange={handleChange}
-            className="border rounded-lg p-3"
-            required
+      )}
+      {submit && (
+        <div className="flex justify-end">
+          <button
+            onClick={handleBiometric(formData.unique_id)}
+            disabled={!submit}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg cursor-pointer"
           >
-            <option value="">Gender</option>
-            <option value="Female">Female</option>
-            <option value="Male">Male</option>
-          </select>
-
-          <input
-            type="date"
-            name="dob"
-            className="border rounded-lg p-3"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Milk Yield & Vaccination */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="number"
-            name="avgMilkYield"
-            placeholder="Avg Milk Yield (LPD)"
-            className="border rounded-lg p-3"
-            onChange={handleChange}
-          />
-
-          <select
-            name="vaccinationStatus"
-            onChange={handleChange}
-            className="border rounded-lg p-3"
+            Link Biometric
+          </button>
+          <button
+            onClick={() => downloadReport(formData.unique_id)}
+            disabled={!submit}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg cursor-pointer"
           >
-            <option value="">Vaccination Status</option>
-            <option value="Up to date">Up to date</option>
-            <option value="Pending">Pending</option>
-          </select>
+            Download Report
+          </button>
         </div>
-
-        {/* Location */}
-        <input
-          type="text"
-          name="location"
-          placeholder="Village / District / State"
-          className="border rounded-lg p-3 w-full"
-          onChange={handleChange}
-          required
-        />
-
-        
-        
-
-        {/* Submit */}
-        <button
-          type="submit"
-          className="w-full py-3 bg-primary-green text-white rounded-lg font-semibold hover:bg-secondary-green transition"
-        >
-          Register Cattle
-        </button>
-      </form>
-    </div>
+      )}
+    </main>
   );
 };
 
