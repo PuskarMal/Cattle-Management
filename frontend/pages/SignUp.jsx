@@ -400,7 +400,7 @@ const stateDistricts = {
         <div className="text-center">
           <p className="text-sm text-gray-600">
             Already signed up?{' '}
-            <a href="/login" className="font-medium text-green-600 hover:text-green-500">
+            <a href="/login" className="font-md text-green-600 hover:text-green-500">
               Login here
             </a>
           </p>
