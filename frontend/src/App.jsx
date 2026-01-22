@@ -12,6 +12,8 @@ import Marketplace from '../pages/Marketplace'
 import Biometric from '../pages/Biometric'
 import Home from '../pages/Home'
 import Profile from '../pages/Profile'
+import Signup from '../pages/SignUp'
+import Login from '../pages/Login'
 
 import "./i18n";
 
@@ -30,6 +32,8 @@ const App = () => {
         <Route path="/identify" element={<Biometric/>}/>
         <Route path="/identify/:id" element={<Biometric/>}/>
         <Route path="/profile" element={<Profile/>}/>
+        <Route path="/signup" element={<Signup/>}/>
+        <Route path="/login" element={<Login/>}/>
       </Routes>
       <VoicebotLogo/>
       <Footer />
