@@ -29,7 +29,9 @@ const predictRoute = require("./routes/predict.js");
 const registerCattleRoute = require("./routes/registercattle.js");
 const report = require("./routes/report.js")
 const biometric = require("./routes/biometric.js")
+const user = require("./routes/user.js");
 
+app.use("/", user);
 
 app.use("/", registerCattleRoute);
 
