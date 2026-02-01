@@ -5,6 +5,8 @@ const mongoose = require("mongoose")
 const { getGridFSBucket } = require("../config/gridfs")
 const upload = require("../middleware/upload")
 
+const User = require("../models/user")
+
 const state = {
   "West Bengal": "WB",
   "Tamil Nadu": "TN",
@@ -18,12 +20,18 @@ const breed = {
   "Tharparkar": "458"
 }
 
-
 router.post("/register-cattle", upload.single("image"), async (req, res) => {
   try {
-
     if (!req.file) {
       return res.status(400).json({ error: "Image required" });
+    }
+
+    const ownerId = req.headers.ownerid;
+
+    const user = await User.findOne({ user_id: ownerId });
+
+    if (!user) {
+      return res.status(404).json({ error: "Owner not found" });
     }
 
     const bucket = getGridFSBucket();
@@ -37,38 +45,53 @@ router.post("/register-cattle", upload.single("image"), async (req, res) => {
     );
 
     uploadStream.end(req.file.buffer);
+
     uploadStream.on("finish", async () => {
-      const imageId = uploadStream.id; // ✅ THIS IS THE FILE ID
-      const cattleData = {
-        ...req.body,
-        milk_production: JSON.parse(req.body.milk_production),
-        health_status: JSON.parse(req.body.health_status),
-        image_id: imageId
-      };
+      try {
+        const imageId = uploadStream.id;
 
+        const cattleData = {
+          ...req.body,
+          milk_production: JSON.parse(req.body.milk_production),
+          health_status: JSON.parse(req.body.health_status),
+          image_id: imageId,
+          owner_id: user._id // ✅ link owner correctly
+        };
 
-      const uniqueId =
-        state[req.body.state] +
-        breed[req.body.breed_name] +
-        Math.floor(Math.random() * 100000);
+        const uniqueId =
+          state[req.body.state] +
+          breed[req.body.breed_name] +
+          Math.floor(Math.random() * 100000);
 
-      const newCattle = new Cattle({
-        ...cattleData,
-        unique_id: uniqueId
-      });
+        const newCattle = new Cattle({
+          ...cattleData,
+          unique_id: uniqueId
+        });
 
-      await newCattle.save();
+        await newCattle.save();
 
-      res.status(201).json({
-        message: "Cattle registered successfully",
-        unique_id: uniqueId
-      });
+        // ✅ add cattle reference to user
+        user.cattle.push(newCattle._id);
+        await user.save();
+
+        res.status(201).json({
+          message: "Cattle registered successfully",
+          unique_id: uniqueId
+        });
+
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "DB save failed" });
+      }
     });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to register cattle" });
   }
 });
+
+
 router.get("/cattle_image/:id", async (req, res) => {
   try {
     const bucket = getGridFSBucket();
@@ -89,6 +112,8 @@ router.get("/cattle_image/:id", async (req, res) => {
     res.status(400).json({ message: "Invalid image id" });
   }
 });
+
+
 
 
 router.post(
@@ -132,20 +157,22 @@ router.post(
   }
 );
 
-router.get("/fetch-cattle-profile/:unique_id", async(req,res) => {
-  const {unique_id} = req.params;
-  
+
+
+
+router.get("/fetch-cattle-profile/:unique_id", async (req, res) => {
+  const { unique_id } = req.params;
+
   try {
-    const cattle = await Cattle.findOne({unique_id});
-    
-    if(!cattle)
-      return res.status(404).json({error: "No cattle found with this ID"})
-    else{
+    const cattle = await Cattle.findOne({ unique_id });
+
+    if (!cattle)
+      return res.status(404).json({ error: "No cattle found with this ID" })
+    else {
       res.json(cattle)
     }
   }
-  catch(err)
-  {
+  catch (err) {
     console.log(err)
   }
 })
