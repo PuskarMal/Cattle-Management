@@ -55,7 +55,7 @@ async def extract_muzzle(file: UploadFile = File(...)):
         roi = image[y1:y2, x1:x2]
 
         features = extract_features(roi)
-        print(features)
+        
         return {
             "features": features,
             "confidence": confidence
