@@ -5,16 +5,28 @@ const cattleSchema = new mongoose.Schema({
   name: String,
   species: { type: String, enum: ["Cow", "Buffalo"], required: true },
   breed_name: { type: String, required: true },
-  age_in_months: {type: Number},
-  gender: {type: String, enum: ["Male", "Female"]},
+  age_in_months: { type: Number },
+  gender: { type: String, enum: ["Male", "Female"] },
   owner_id: {
-    id: String,
-    name: String,
-    phone: String
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+    default: null,
+    sparse: true
+  },
+  sire_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "cattle_masters",
+    default: null
+  },
+
+  dam_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "cattle_masters",
+    default: null
   },
 
   address: { type: String },
-  
+
   state: { type: String, required: true },
   district: { type: String, required: true },
 
@@ -23,7 +35,7 @@ const cattleSchema = new mongoose.Schema({
     fat_percentage: Number
   },
   biometric: {
-    features:{
+    features: {
       type: [Number]
     },
     confidence: Number,
@@ -46,11 +58,11 @@ const cattleSchema = new mongoose.Schema({
     type: String, unique: true, required: true
   },
   image_id: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "cattle_images.files"
-},
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "cattle_images.files"
+  },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model("cattle_master", cattleSchema);
+module.exports = mongoose.model("cattle_masters", cattleSchema);
