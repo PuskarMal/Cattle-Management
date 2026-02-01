@@ -24,7 +24,7 @@ const Login = () => {
         setMessage(`Welcome back, ${data.user.full_name}! Role: ${data.user.role}. Redirecting to your cattle profile...`);
         localStorage.setItem('user', JSON.stringify(data.user)); // Store for sessions
         setTimeout(() => {
-          window.location.href = '/cattle-profile'; // Redirect after brief message
+          window.location.href = '/home'; // Redirect after brief message
         }, 1500);
       } else {
         setMessage(`Error: ${data.error || 'Login failed'}`);
