@@ -30,7 +30,7 @@ def preprocess_image_from_bytes(image_bytes):
     img_array = image.img_to_array(img) / 255.0
     return np.expand_dims(img_array, axis=0)
 
-@app.route("/predict", methods=["POST"])
+@app.route("/predict-breed", methods=["POST"])
 def predict():
     try:
         if "image" not in request.files:
@@ -54,6 +54,44 @@ def predict():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+disease_model = tf.keras.models.load_model("../backend/models/best_densenet_cattle.keras")
+
+DISEASE_CLASSES = ["Foot and Mouth", "Healthy", "Lumpy Disease"]
+
+
+@app.route("/predict-disease", methods=["POST"])
+def predict_disease():
+    try:
+        if "image" not in request.files:
+            return jsonify({"error": "Image missing"}), 400
+
+        image_bytes = request.files["image"].read()
+
+        h, w = disease_model.input_shape[1], disease_model.input_shape[2]
+
+        img = Image.open(BytesIO(image_bytes)).convert("RGB")
+        img = img.resize((w, h))
+        img_arr = image.img_to_array(img) / 255.0
+        img_arr = np.expand_dims(img_arr, axis=0)
+
+        preds = disease_model.predict(img_arr, verbose=0)[0]
+        idx = int(np.argmax(preds))
+
+        return jsonify({
+            "disease": DISEASE_CLASSES[idx],
+            "confidence": round(float(preds[idx]) * 100, 2),
+            "all_probabilities": {
+                DISEASE_CLASSES[i]: round(float(preds[i]) * 100, 2)
+                for i in range(len(DISEASE_CLASSES))
+            }
+        })
+
+    except Exception as e:
+        print("Disease prediction error:", str(e))
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)
