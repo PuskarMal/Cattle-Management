@@ -30,14 +30,16 @@ const registerCattleRoute = require("./routes/registercattle.js");
 const report = require("./routes/report.js")
 const biometric = require("./routes/biometric.js")
 const user = require("./routes/user.js");
+const family = require("./routes/familyTree.js")
 
-app.use("/", user);
+app.use("/api/users/", user);
 
 app.use("/", registerCattleRoute);
 
 app.use("/predict", predictRoute);
 app.use("/",report);
 app.use("/",biometric)
+app.use("/",family)
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port http://localhost:${process.env.PORT || 3000}`);
