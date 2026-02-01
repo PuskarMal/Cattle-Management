@@ -14,7 +14,7 @@ import Home from '../pages/Home'
 import Profile from '../pages/Profile'
 import Signup from '../pages/SignUp'
 import Login from '../pages/Login'
-
+import Disease from '../pages/Disease'
 import "./i18n";
 
 const App = () => {
@@ -34,6 +34,7 @@ const App = () => {
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/login" element={<Login/>}/>
+        <Route path='/disease' element={<Disease/>}/>
       </Routes>
       <VoicebotLogo/>
       <Footer />
