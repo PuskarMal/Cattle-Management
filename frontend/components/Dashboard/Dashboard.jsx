@@ -1,13 +1,14 @@
 import React from 'react'
 import { useTranslation } from "react-i18next"; //sujit
-
+import {useNavigate} from "react-router-dom"
 import { ImCheckmark } from "react-icons/im";
 import SpeakerButton from '../Speaker/Speaker'; //Sujit
 import UploadImage from '../UploadImage/UploadImage';
 
 const Dashboard = () => {
     const { t, i18n } = useTranslation(); //sujit  
-     
+    const navigate = useNavigate()
+
     return (
         <main id="main-content" className="w-full lg:w-3/4 p-8 bg-gray-100">
 
@@ -60,7 +61,7 @@ const Dashboard = () => {
                                     <span data-i18n="d1">
                                         {t("f1")}
                                     </span>
-                                    <button className="opacity-70 text-lg hover:opacity-100" 
+                                    <button className="opacity-70 text-lg hover:opacity-100"
                                         title="Listen">🔊</button>
                                 </li>
 
@@ -69,7 +70,7 @@ const Dashboard = () => {
                                     <span data-i18n="d2">
                                         {t("f2")}
                                     </span>
-                                    <button className="opacity-70 text-lg hover:opacity-100" 
+                                    <button className="opacity-70 text-lg hover:opacity-100"
                                         title="Listen">🔊</button>
                                 </li>
 
@@ -78,7 +79,7 @@ const Dashboard = () => {
                                     <span data-i18n="d3">
                                         {t("f3")}
                                     </span>
-                                    <button className="opacity-70 text-lg hover:opacity-100" 
+                                    <button className="opacity-70 text-lg hover:opacity-100"
                                         title="Listen">🔊</button>
                                 </li>
 
@@ -109,19 +110,12 @@ const Dashboard = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                <UploadImage />
-                <span id="analyze-button" data-i18n="analysis"
-                    className="mt-6 w-full py-3 border-2 flex cursor-pointer items-center text-white bg-cyan-900 hover:bg-cyan-700 border-sky-600 justify-center rounded-lg transition duration-200 font-semibold shadow-xl hover:shadow-2xl"
-                    >
-
-                    {t("analyze")}
-                </span>
-                <button className="opacity-70 text-xl cursor-pointer hover:opacity-100"
-                    title="Listen">🔊</button>
+                    <UploadImage onImageReady={(file) =>
+                        navigate("/analytics", { state: { imageFile: file } })
+                    } />
 
 
-
-                <div id="feedback-message" className="mt-4 text-sm text-center text-gray-600 hidden"></div>
+                    <div id="feedback-message" className="mt-4 text-sm text-center text-gray-600 hidden"></div>
                 </div>
                 <section className="space-y-4 mt-4">
 
@@ -179,7 +173,7 @@ const Dashboard = () => {
                 </section>
 
             </div>
-            
+
 
         </main>
     )

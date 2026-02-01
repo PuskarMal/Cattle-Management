@@ -1,19 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { useTranslation } from "react-i18next";
 
-const UploadImage = () => {
+const UploadImage = ({onImageReady}) => {
   const fileInputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const navigate = useNavigate();
+  
   const { t } = useTranslation();
   const analyzeImage = () => {
         if (!imageFile) {
             alert("Please upload an image first");
             return;
         }
-        navigate("/analytics", { state: { imageFile } });
+        onImageReady(imageFile)
+        
     }; 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -39,7 +40,7 @@ const UploadImage = () => {
 
       {!preview && (
         <div
-          className="bg-gray-50 p-8 rounded-xl border-2 border-dashed border-gray-300 hover:border-primary-green cursor-pointer"
+          className="bg-gray-50 p-10 rounded-xl border-2 border-dashed border-gray-300 hover:border-primary-green cursor-pointer"
           onClick={() => fileInputRef.current.click()}
         >
           <div className="flex flex-col items-center text-center">
@@ -82,7 +83,8 @@ const UploadImage = () => {
             </button>
             <button
               onClick={analyzeImage}
-              className="py-2 px-4 text-sm font-semibold rounded-full bg-gray-200 hover:bg-gray-300"
+              className="px-4 py-2 text-sm font-semibold rounded-full
+                       bg-cyan-900 text-white hover:bg-cyan-700"
             >
               Analyze Image
             </button>
