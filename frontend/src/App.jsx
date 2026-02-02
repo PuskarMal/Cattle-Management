@@ -1,5 +1,5 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Route, Routes, Navigate } from 'react-router-dom'
 
 import Navbar from '../components/Navbar/Navbar'
 import Footer from '../components/Footer/Footer'
@@ -18,11 +18,14 @@ import Disease from '../pages/Disease'
 import "./i18n";
 
 const App = () => {
+
   return (
     <div>
-
+      
       <Navbar />
+    
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/analytics" element={<BreedAnalytics />} />
         <Route path="/marketplace" element={<Marketplace />} />
@@ -36,9 +39,9 @@ const App = () => {
         <Route path="/login" element={<Login/>}/>
         <Route path='/disease' element={<Disease/>}/>
       </Routes>
+
       <VoicebotLogo/>
       <Footer />
-
     </div>
   )
 }

@@ -2,7 +2,7 @@ import React from "react";
 import logo from "../Navbar/logo.jpeg";
 import { useTranslation } from "react-i18next";
 
-const Navbar = () => {
+const Navbar = ({ isAdmin }) => {
   const { t, i18n } = useTranslation();
 
   return (
@@ -25,6 +25,8 @@ const Navbar = () => {
           <a href="/voicebot" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.voice")}</a>
           <a href="/help" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.help")}</a>
         </div>
+
+        
 
         {/* Right Controls */}
         <div className="flex items-center gap-4">
