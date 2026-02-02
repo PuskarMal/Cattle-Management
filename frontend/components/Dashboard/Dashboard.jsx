@@ -1,12 +1,14 @@
 import React from 'react'
 import { useTranslation } from "react-i18next"; //sujit
-
+import {useNavigate} from "react-router-dom"
 import { ImCheckmark } from "react-icons/im";
 import SpeakerButton from '../Speaker/Speaker'; //Sujit
 import UploadImage from '../UploadImage/UploadImage';
 
 const Dashboard = () => {
-    const { t, i18n } = useTranslation(); //sujit    
+    const { t, i18n } = useTranslation(); //sujit  
+    const navigate = useNavigate()
+
     return (
         <main id="main-content" className="w-full lg:w-3/4 p-8 bg-gray-100">
 
@@ -31,8 +33,7 @@ const Dashboard = () => {
                                 <p className="text-gray-700 text-justify max-w-xl leading-relaxed text-sm md:text-base" data-i18n="desc">
                                     {t("longtext")}
                                 </p>
-                                <button className="opacity-70 text-xl hover:opacity-100" 
-                                    title="Listen">🔊</button>
+                                <SpeakerButton textKey="longtext" />
                             </div>
 
 
@@ -60,7 +61,7 @@ const Dashboard = () => {
                                     <span data-i18n="d1">
                                         {t("f1")}
                                     </span>
-                                    <button className="opacity-70 text-lg hover:opacity-100" 
+                                    <button className="opacity-70 text-lg hover:opacity-100"
                                         title="Listen">🔊</button>
                                 </li>
 
@@ -69,7 +70,7 @@ const Dashboard = () => {
                                     <span data-i18n="d2">
                                         {t("f2")}
                                     </span>
-                                    <button className="opacity-70 text-lg hover:opacity-100" 
+                                    <button className="opacity-70 text-lg hover:opacity-100"
                                         title="Listen">🔊</button>
                                 </li>
 
@@ -78,7 +79,7 @@ const Dashboard = () => {
                                     <span data-i18n="d3">
                                         {t("f3")}
                                     </span>
-                                    <button className="opacity-70 text-lg hover:opacity-100" 
+                                    <button className="opacity-70 text-lg hover:opacity-100"
                                         title="Listen">🔊</button>
                                 </li>
 
@@ -108,7 +109,14 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <UploadImage />
+                <div>
+                    <UploadImage onImageReady={(file) =>
+                        navigate("/analytics", { state: { imageFile: file } })
+                    } />
+
+
+                    <div id="feedback-message" className="mt-4 text-sm text-center text-gray-600 hidden"></div>
+                </div>
                 <section className="space-y-4 mt-4">
 
 
@@ -165,7 +173,7 @@ const Dashboard = () => {
                 </section>
 
             </div>
-            
+
 
         </main>
     )

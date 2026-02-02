@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-
+const {initGridFS} = require("./config/gridfs.js");
 require("dotenv").config();
 require("./config/db.js");
 app.set("view engine", "ejs");
@@ -9,7 +9,7 @@ app.set("view engine", "ejs");
 const allowedOrigins = [
   "http://localhost:5173"
 ];
-
+initGridFS()
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -27,10 +27,20 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'))
 
 const predictRoute = require("./routes/predict.js");
-const productRoutes = require('./routes/productRoutes');
+const registerCattleRoute = require("./routes/registercattle.js");
+const report = require("./routes/report.js")
+const biometric = require("./routes/biometric.js")
+const user = require("./routes/user.js");
+const family = require("./routes/familyTree.js")
+
+app.use("/api/users/", user);
+
+app.use("/", registerCattleRoute);
 
 app.use("/predict", predictRoute);
-app.use('/api/products', productRoutes);
+app.use("/",report);
+app.use("/",biometric)
+app.use("/",family)
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port http://localhost:${process.env.PORT || 3000}`);

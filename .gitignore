@@ -1,0 +1,3 @@
+backend/models/complete_muzzle_model.pt
+backend/models/model.h5
+backend/models/best_densenet_cattle.keras

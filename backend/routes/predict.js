@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const multer = require("multer");
-const Breed = require("../models/Breed");
+const Breed = require("../models/breed");
 const { callPythonAI } = require("../pythonAI");
 
 const upload = multer({ dest: "uploads/" });
