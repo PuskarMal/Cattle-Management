@@ -1,50 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 const SAMRIDHI_MARKETPLACE = () => {
   const [cart, setCart] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]); // State for live products
   const [loading, setLoading] = useState(true);
 
-  const backendURL = "http://localhost:3000";
+  const backendURL = "http://localhost:3000"; // Your server URL
 
-  // Fetch products
+  // 1. Fetch products from MongoDB on page load
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(`${backendURL}/api/products/all`);
         const data = await response.json();
         setProducts(data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching marketplace data:", error);
-      } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
   const addToCart = (product) => {
-    setCart((prev) => [...prev, product]);
-    alert(`${product.breed_name || product.name} added to cart`);
+    setCart([...cart, product]);
+    alert(`${product.breed_name || product.name} added to cart!`);
   };
 
-  // Category filtering
-  const filteredProducts =
-    activeCategory === "All"
-      ? products
-      : products.filter(
-          (p) =>
-            p.listing_type === activeCategory ||
-            p.category === activeCategory
-        );
-
-  // Extract categories dynamically
-  const categories = [
-    "All",
-    ...new Set(products.map((p) => p.listing_type || p.category)),
-  ];
+  // 2. Filter logic (works with MongoDB field names)
+  const filteredProducts = activeCategory === "All" 
+    ? products 
+    : products.filter(p => p.listing_type === activeCategory || p.category === activeCategory);
 
   return (
     <div className="p-6 min-h-screen bg-gray-50">

@@ -3,7 +3,7 @@ const cors = require("cors");
 const app = express();
 const {initGridFS} = require("./config/gridfs.js");
 require("dotenv").config();
-require("./db.js");
+require("./config/db.js");
 app.set("view engine", "ejs");
 
 const allowedOrigins = [
@@ -24,6 +24,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use('/uploads', express.static('uploads'))
 
 const predictRoute = require("./routes/predict.js");
 const registerCattleRoute = require("./routes/registercattle.js");

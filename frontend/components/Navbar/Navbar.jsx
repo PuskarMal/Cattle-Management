@@ -3,7 +3,7 @@ import logo from "../Navbar/logo.jpeg";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-const Navbar = () => {
+const Navbar = ({ isAdmin }) => {
   const { t, i18n } = useTranslation();
   const { isLoggedIn, role } = useSelector((state) => state.auth);
 
@@ -52,6 +52,8 @@ const Navbar = () => {
             </>
           )}
         </div>
+
+        
 
         {/* Right Controls */}
         <div className="flex items-center gap-4">

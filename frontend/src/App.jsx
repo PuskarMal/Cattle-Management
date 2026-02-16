@@ -39,9 +39,11 @@ const App = () => {
   }, []);
   return (
     <div>
-
+      
       <Navbar />
+    
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/analytics" element={<BreedAnalytics />} />
         <Route path="/marketplace" element={<Marketplace />} />
@@ -60,9 +62,9 @@ const App = () => {
         <Route path="/admin-marketplace" element={<AdminMarketplace/>}/>
         <Route path="/help" element={<Help/>}/>
       </Routes>
+
       <VoicebotLogo/>
       <Footer />
-
     </div>
   )
 }
