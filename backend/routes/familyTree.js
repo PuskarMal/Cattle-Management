@@ -12,6 +12,7 @@ router.patch("/link-parents/:id", async (req, res) => {
   if (dam_id) {
     const dam = await Cattle.findOne({unique_id: dam_id});
     const sire = await Cattle.findOne({unique_id: sire_id});
+    const children = await Cattle.find({$or: [{sire_id: sire._id}, {dam_id: dam._id}]});
     
     if (dam.gender !== "Female") {
       return res.status(400).json({ error: "Dam must be female" });
@@ -19,6 +20,7 @@ router.patch("/link-parents/:id", async (req, res) => {
     }
     cattle.sire_id = sire._id;
   cattle.dam_id = dam._id;
+  cattle.children = children.map(child => child._id);
   }
   
 
