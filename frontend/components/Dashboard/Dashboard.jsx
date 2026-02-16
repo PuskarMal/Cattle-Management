@@ -1,16 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from "react-i18next"; //sujit
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ImCheckmark } from "react-icons/im";
 import SpeakerButton from '../Speaker/Speaker'; //Sujit
 import UploadImage from '../UploadImage/UploadImage';
 
+
 const Dashboard = () => {
     const { t, i18n } = useTranslation(); //sujit  
     const navigate = useNavigate()
-
+    const [activities, setActivities] = useState([])
+    useEffect(() => {
+        const fetchActivities = async () => {
+            try {
+                const res = await fetch("http://localhost:3000/recent-activity");
+                const data = await res.json();
+                setActivities(data);
+            } catch (err) {
+                console.error("Failed to fetch activities:", err);
+            }
+        };
+        fetchActivities();
+    }, []);
     return (
-        <main id="main-content" className="w-full lg:w-3/4 p-8 bg-gray-100">
+        <main id="main-content" className="w-full p-8 bg-gray-100">
 
 
             <div className="flex flex-col md:flex-row justify-between items-start">
@@ -117,60 +130,68 @@ const Dashboard = () => {
 
                     <div id="feedback-message" className="mt-4 text-sm text-center text-gray-600 hidden"></div>
                 </div>
-                <section className="space-y-4 mt-4">
+                <section className="space-y-4">
 
-
+                    {/* Header */}
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-semibold text-gray-800 cursor-pointer">
+                        <h2 className="text-xl font-semibold text-gray-800">
                             {t("recentactivity")}
                         </h2>
-                        <a href="/activity.html" className="text-sm cursor-pointer text-primary-green hover:underline">
+                        <a
+                            href="/activity"
+                            className="text-sm text-green-600 hover:underline font-medium"
+                        >
                             {t("viewall")}
                         </a>
                     </div>
 
-
+                    {/* Activity List */}
                     <div className="bg-white border border-gray-200 rounded-xl shadow-sm divide-y">
 
+                        {activities.map((activity, index) => (
+                            <div
+                                key={index}
+                                className="p-4 flex items-start gap-4 hover:bg-gray-50 transition"
+                            >
+                                {/* Icon */}
+                                <div className="flex-shrink-0">
+                                    <span className="flex items-center justify-center w-9 h-9 rounded-full bg-green-100 text-green-600">
+                                        ➕
+                                    </span>
+                                </div>
 
-                        <div className="p-4 flex items-start gap-3">
-                            <span className="text-green-600 text-lg">➕</span>
-                            <div>
-                                <p className="text-sm text-gray-800">
-                                    {t("newanimalregistered")}
-                                </p>
-                                <p className="text-xs text-gray-500 hover-underline cursor-pointer hover:text-blue-500">
-                                    C100669110
-                                </p>
-                            </div>
-                        </div>
+                                {/* Content */}
+                                <div className="flex-1">
 
-                        <div className="p-4 flex items-start gap-3">
-                            <span className="text-blue-600 text-lg">📷</span>
-                            <div>
-                                <p className="text-sm text-gray-800">
-                                    {t("animalidentified")}
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                    C100578424
-                                </p>
-                            </div>
-                        </div>
+                                    {/* Action */}
+                                    <p className="text-sm font-medium text-gray-800">
+                                        {activity.action === "CATTLE_REGISTERED"
+                                            ? "Cattle Registered"
+                                            : activity.action === "REPORT_GENERATED"
+                                                ? "Health Report Generated"
+                                                : activity.action === "CATTLE_UPDATED"
+                                                    ? "Cattle Details Updated"
+                                                    : activity.action}
+                                    </p>
 
-                        <div className="p-4 flex items-start gap-3">
-                            <span className="text-purple-600 text-lg">🧬</span>
-                            <div>
-                                <p className="text-sm text-gray-800">
-                                    {t("genetictestcompleted")}
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                    M500677384
-                                </p>
+                                    {/* Metadata */}
+                                    <p className="text-md text-gray-500">
+                                        {activity.metadata?.breed || "No description available"}
+                                    </p>
+                                </div>
+
+                                {/* Entity ID Badge */}
+                                {activity.entityId?.unique_id && (
+                                    <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded-lg">
+                                        #{activity.entityId.unique_id}
+                                    </span>
+                                )}
                             </div>
-                        </div>
+                        ))}
 
                     </div>
                 </section>
+
 
             </div>
 
