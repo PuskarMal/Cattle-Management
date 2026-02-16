@@ -112,22 +112,25 @@ const CattleProfile = () => {
               className="h-48 mx-auto rounded-lg object-cover shadow"
             />
 
-
-            {cattle.biometric && (
-              <div className="mt-4">
-                <p className="text-sm text-gray-500">Biometric Confidence</p>
+            <div className="mt-4">
+              <p className="text-sm text-gray-500">Biometric Status</p>
+              {cattle?.biometric?.confidence ? (
                 <p
                   className={`text-xl font-bold ${cattle.biometric.confidence >= 0.85
-                    ? "text-green-600"
-                    : cattle.biometric.confidence >= 0.6
-                      ? "text-yellow-600"
-                      : "text-red-600"
+                      ? "text-green-600"
+                      : cattle.biometric.confidence >= 0.6
+                        ? "text-yellow-600"
+                        : "text-red-600"
                     }`}
                 >
-                  {(cattle.biometric.confidence * 100).toFixed(2)}%
+                  Verified
                 </p>
-              </div>
-            )}
+              ) : (
+                <p className="text-xl font-bold text-gray-400">Not Verified</p>
+              )}
+
+            </div>
+
           </div>
 
           {/* Basic Info */}
@@ -155,9 +158,9 @@ const CattleProfile = () => {
             <h2 className="text-lg font-semibold text-gray-700 mb-3">
               Owner Information
             </h2>
-            <Info label="Name" value={cattle.owner_id.name} />
-            <Info label="Phone" value={cattle.owner_id.phone} />
-            <Info label="Aadhaar" value={cattle.owner_id.id} />
+            <Info label="Name" value={cattle.owner_id.full_name} />
+            <Info label="Phone" value={cattle.owner_id.phone_number} />
+            <Info label="Aadhaar" value={cattle.owner_id.user_id} />
           </div>
 
           <div className="bg-zinc-50 shadow-sm rounded-xl p-4">
@@ -176,8 +179,8 @@ const CattleProfile = () => {
         </div>
         <FamilyTree tree={familyTreeData} />
       </div>
-      
-    </div>
+
+    </div >
   );
 };
 
