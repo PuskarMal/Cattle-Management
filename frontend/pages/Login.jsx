@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-
+import { useDispatch } from 'react-redux';
+import { authActions } from '../src/store/auth';
+import axios from 'axios';
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [message, setMessage] = useState('');
-
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -14,46 +16,45 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:3000/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setMessage(`Welcome back, ${data.user.full_name}! Role: ${data.user.role}. Redirecting to your cattle profile...`);
-        localStorage.setItem('user', JSON.stringify(data.user)); // Store for sessions
+      const res = await axios.post('http://localhost:3000/api/users/login', formData);
+      
+      dispatch(authActions.login());
+        dispatch(authActions.changeRole(res.data.role));
+        localStorage.setItem("id", res.data.id);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("role", res.data.role);
+        
+      const data = res.data;
+      if (data) {
+        setMessage(`Welcome back! Redirecting to your cattle profile...`);
         setTimeout(() => {
-          window.location.href = '/home'; // Redirect after brief message
-        }, 1500);
+          window.location.href = '/my-cattle';
+        }, 2000);
+        
+        
       } else {
         setMessage(`Error: ${data.error || 'Login failed'}`);
       }
     } catch (err) {
-      setMessage('Server error—check backend console?');
+      setMessage(err);
     }
   };
 
-  const isSuccess = message.includes('Welcome back'); // Quick check for styling
+  //const isSuccess = message.includes('Welcome back'); // Quick check for styling
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Cattle Management Login
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Access your WB cattle dashboard – Track, verify & report! 🐮
-          </p>
-        </div>
+        <p className="text-center text-lg font-medium text-gray-700">
+          Login to your account
+        </p>
         <form className="mt-8 space-y-6 bg-white p-8 rounded-lg shadow-md" onSubmit={handleLogin}>
           <div className="space-y-4">
             <div>
               <input
                 type="email"
                 name="email"
-                placeholder="Email (e.g., soubhik@puruliya.com)"
+                placeholder="Email (E.g. johnrobinson@gnit.ac.in)"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -95,10 +96,11 @@ const Login = () => {
         </form>
 
         {message && (
-          <div className={`mt-4 p-4 rounded-md ${isSuccess ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'}`}>
+          <div className={`mt-4 p-4 rounded-md `}>
             <p dangerouslySetInnerHTML={{ __html: message }} />
           </div>
         )}
+
       </div>
     </div>
   );
