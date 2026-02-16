@@ -11,7 +11,12 @@ const cattleSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",
     default: null,
-    sparse: true
+    sparse: true,
+    index: true
+  },
+  children: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "cattle_masters" }],
+    default: []
   },
   sire_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -41,7 +46,7 @@ const cattleSchema = new mongoose.Schema({
     confidence: Number,
     enrolled_at: Date
   },
-
+  
   health_status: {
     current_condition: String,
     last_vaccination_date: Date
@@ -60,6 +65,10 @@ const cattleSchema = new mongoose.Schema({
   image_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "cattle_images.files"
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User" // admin
   },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
