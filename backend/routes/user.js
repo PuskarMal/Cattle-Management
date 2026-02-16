@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require("../models/user"); // Mongoose model (not array!)
+const jwt = require("jsonwebtoken");
 
 // POST /api/users/register
 router.post('/register', async (req, res) => {
@@ -25,6 +26,7 @@ router.post('/register', async (req, res) => {
       phone_number,
       role: role || 'farmer',
       mother_tongue,
+      user_id,
       location  // Nested: { state, district, village }
     });
 
@@ -41,7 +43,8 @@ router.post('/register', async (req, res) => {
         phone_number: newUser.phone_number,
         role: newUser.role,
         mother_tongue: newUser.mother_tongue,
-        location: newUser.location
+        location: newUser.location,
+        user_id: newUser.user_id
       }
     });
   } catch (err) {
@@ -66,18 +69,21 @@ router.post('/login', async (req, res) => {
     }
 
     // 2️⃣ Success response (include new fields)
-    res.json({
-      message: 'Login successful',
-      user: {
-        id: user._id,
-        full_name: user.full_name,
-        email: user.email,
-        phone_number: user.phone_number,
-        role: user.role,
-        mother_tongue: user.mother_tongue,
-        location: user.location,
-        owned_cattle: user.owned_cattle
-      }
+    const authClaims = [
+      { id: user.user_id },
+      { role: user.role },
+    ];
+    console.log("Auth Claims:", authClaims);
+
+    const token = jwt.sign({ authClaims }, process.env.JWT_SECRET || "lms123", {
+      expiresIn: "2d",
+    });
+    
+
+    return res.status(200).json({
+      id: user.user_id,
+      role: user.role,
+      token
     });
   } catch (err) {
     console.error(err);
