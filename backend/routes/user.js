@@ -120,5 +120,60 @@ router.get('/profile/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch profile' });
   }
 });
+// GET /api/users/profile/:id   ← kept your original (public or for admin use)
+router.get('/profile/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password -__v');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        id: user._id,
+        full_name: user.full_name,
+        email: user.email,
+        phone_number: user.phone_number,
+        role: user.role,
+        mother_tongue: user.mother_tongue,
+        location: user.location,
+        owned_cattle: user.owned_cattle || []
+      }
+    });
+  } catch (err) {
+    console.error('Profile fetch error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch profile' });
+  }
+});
+
+// GET /api/users/profile/me   ← NEW protected route for logged-in user
+router.get('/profile/me', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id)
+      .select('-password -__v -createdAt -updatedAt');
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        id: user._id,
+        full_name: user.full_name,
+        email: user.email,
+        phone_number: user.phone_number,
+        role: user.role,
+        mother_tongue: user.mother_tongue,
+        location: user.location,
+        owned_cattle: user.owned_cattle || []
+      }
+    });
+  } catch (err) {
+    console.error('Self-profile error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
 
 module.exports = router;
