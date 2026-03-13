@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require("../models/user"); // Mongoose model (not array!)
 const jwt = require("jsonwebtoken");
+const { updateMany } = require('../models/cattle');
 
 // POST /api/users/register
 router.post('/register', async (req, res) => {
@@ -94,10 +95,10 @@ router.post('/login', async (req, res) => {
 // GET /api/users/profile/:id (updated response to include new fields)
 router.get('/profile/:id', async (req, res) => {
   try {
-    const { id } = req.params;
+    
 
     // 1️⃣ Find in DB
-    const user = await User.findById(id).select('-password');  // Exclude password
+    const user = await User.findOne({user_id: req.params.id});  // Exclude password
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -112,12 +113,41 @@ router.get('/profile/:id', async (req, res) => {
         role: user.role,
         mother_tongue: user.mother_tongue,
         location: user.location,
-        owned_cattle: user.owned_cattle
+        owned_cattle: user.owned_cattle,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt
       }
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch profile' });
+  }
+});
+router.get('/profile/me', async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id)
+      .select('-password -__v -createdAt -updatedAt');
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        id: user._id,
+        full_name: user.full_name,
+        email: user.email,
+        phone_number: user.phone_number,
+        role: user.role,
+        mother_tongue: user.mother_tongue,
+        location: user.location,
+        owned_cattle: user.owned_cattle || []
+      }
+    });
+  } catch (err) {
+    console.error('Self-profile error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
