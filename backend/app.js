@@ -7,7 +7,8 @@ require("./config/db.js");
 app.set("view engine", "ejs");
 
 const allowedOrigins = [
-  "http://localhost:5173"
+  "http://localhost:5173",
+  "https://samridhi1.netlify.app/"
 ];
 initGridFS()
 const corsOptions = {
