@@ -169,13 +169,13 @@ const RegisterCattle = () => {
     const formData = new FormData();
     formData.append("image", imageFile);
     try {
-      const res = await fetch("http://127.0.0.1:5000/predict-breed", {
+      const res = await fetch("https://cattle-management-ptz0.onrender.com/predict-breed", {
         method: "POST",
         body: formData
       });
       const data = await res.json();
       setResult(data);
-      const result = await fetch("http://127.0.0.1:5000/predict-disease", {
+      const result = await fetch("https://cattle-management-ptz0.onrender.com/predict-disease", {
         method: "POST",
         body: formData
       });
