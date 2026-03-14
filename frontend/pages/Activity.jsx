@@ -6,7 +6,7 @@ const Activity = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await fetch("http://localhost:3000/activity");
+        const response = await fetch("https://cattle-management-ptz0.onrender.com/activity");
         const data = await response.json();
         setActivities(data);
       } catch (error) {

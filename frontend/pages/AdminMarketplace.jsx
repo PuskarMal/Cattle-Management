@@ -24,7 +24,7 @@ const AdminMarketplace = () => {
     data.append('image', formData.imageFile);
 
     try {
-        const response = await fetch('http://localhost:3000/api/products/add', {
+        const response = await fetch('https://cattle-management-ptz0.onrender.com/api/products/add', {
             method: 'POST',
             body: data,
         });

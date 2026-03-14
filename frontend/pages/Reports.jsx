@@ -5,7 +5,7 @@ const Reports = () => {
   const [reports, setReports] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/reports").then(res => setReports(res.data));
+    axios.get("https://cattle-management-ptz0.onrender.com/reports").then(res => setReports(res.data));
   }, []);
 
   return (
@@ -35,7 +35,7 @@ const Reports = () => {
                 </td>
                 <td className="p-3">
                   <a
-                    href={`http://localhost:3000/report/pdf/${r.pdf_file_id}`}
+                    href={`https://cattle-management-ptz0.onrender.com/report/pdf/${r.pdf_file_id}`}
                     target="_blank"
                     className="text-blue-600 underline"
                   >

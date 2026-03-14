@@ -16,7 +16,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3000/api/users/login', formData);
+      const res = await axios.post('https://cattle-management-ptz0.onrender.com/api/users/login', formData);
       
       dispatch(authActions.login());
         dispatch(authActions.changeRole(res.data.role));

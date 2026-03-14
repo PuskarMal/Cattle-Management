@@ -21,7 +21,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/users/profile/${storedUser}`
+          `https://cattle-management-ptz0.onrender.com/api/users/profile/${storedUser}`
         );
 
         setUser(res.data.user);
@@ -74,7 +74,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/users/profile/${storedUser._id}`,
+          `https://cattle-management-ptz0.onrender.com/api/users/profile/${storedUser._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

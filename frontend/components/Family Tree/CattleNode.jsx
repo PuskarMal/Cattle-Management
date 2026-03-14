@@ -15,7 +15,7 @@ const CattleNode = ({ cattle, highlight = false }) => {
       )}
 
       <img
-        src={`http://localhost:3000/cattle_image/${cattle.image_id}`}
+        src={`https://cattle-management-ptz0.onrender.com/cattle_image/${cattle.image_id}`}
         alt={cattle.name}
         className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl"
       />

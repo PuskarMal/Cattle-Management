@@ -5,7 +5,7 @@ const InfoSections = () => {
   const [reports, setReports] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/reports").then(res => setReports(res.data));
+    axios.get("https://cattle-management-ptz0.onrender.com/reports").then(res => setReports(res.data));
   }, [])
   return (
     <section className="mt-16 space-y-16 ">

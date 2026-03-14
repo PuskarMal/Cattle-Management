@@ -14,7 +14,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const res = await fetch("http://localhost:3000/recent-activity");
+        const res = await fetch("https://cattle-management-ptz0.onrender.com/recent-activity");
         const data = await res.json();
         setActivities(data);
       } catch (err) {

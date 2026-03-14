@@ -135,7 +135,7 @@ const RegisterCattle = () => {
     // Append image
     if (imageFile) {
       data.append("image", imageFile);
-      const res = await axios.post("http://localhost:3000/register-cattle", data, {
+      const res = await axios.post("https://cattle-management-ptz0.onrender.com/register-cattle", data, {
         headers: { ownerid: owner }
       });
       const uniqueId = res.data.unique_id;
@@ -149,7 +149,7 @@ const RegisterCattle = () => {
   }
   const downloadReport = async (unique_id) => {
     const response = await fetch(
-      `http://localhost:3000/download-report/${unique_id}`
+      `https://cattle-management-ptz0.onrender.com/download-report/${unique_id}`
     );
     
     const blob = await response.blob();
@@ -182,7 +182,7 @@ const RegisterCattle = () => {
       const diseasedata = await result.json();
       setDisease(diseasedata)
       const breedDetailsRes = await fetch(
-        `http://localhost:3000/predict/fetch_details/${data.top_predictions[0].breed}`
+        `https://cattle-management-ptz0.onrender.com/predict/fetch_details/${data.top_predictions[0].breed}`
       );
       const breedDetail = await breedDetailsRes.json();
       setBreedDetails(breedDetail.description);

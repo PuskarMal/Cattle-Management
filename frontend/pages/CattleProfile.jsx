@@ -17,7 +17,7 @@ const CattleProfile = () => {
       try {
 
         const res = await axios.get(
-          `http://localhost:3000/fetch-cattle-profile/${unique_id.id}`
+          `https://cattle-management-ptz0.onrender.com/fetch-cattle-profile/${unique_id.id}`
         );
 
         setCattle(res.data);
@@ -29,7 +29,7 @@ const CattleProfile = () => {
     };
     const fetchFamilyTree = async () => {
       const res = await axios.get(
-        `http://localhost:3000/cattle-family-tree/${unique_id.id}`
+        `https://cattle-management-ptz0.onrender.com/cattle-family-tree/${unique_id.id}`
       );
       setFamilyTreeData(res.data);
     };
@@ -107,7 +107,7 @@ const CattleProfile = () => {
           <div className="bg-zinc-50 rounded-xl p-4 text-center shadow-sm">
 
             <img
-              src={`http://localhost:3000/cattle_image/${cattle.image_id}`}
+              src={`https://cattle-management-ptz0.onrender.com/cattle_image/${cattle.image_id}`}
               alt="Cattle"
               className="h-48 mx-auto rounded-lg object-cover shadow"
             />

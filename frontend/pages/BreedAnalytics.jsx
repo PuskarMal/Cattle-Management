@@ -116,7 +116,7 @@ const BreedAnalytics = () => {
         const data = await res.json();
         setResult(data);
         const breedDetailsRes = await fetch(
-          `http://localhost:3000/predict/fetch_details/${data.top_predictions[0].breed}`
+          `https://cattle-management-ptz0.onrender.com/predict/fetch_details/${data.top_predictions[0].breed}`
         );
         const breedDetails = await breedDetailsRes.json();
         setDetails(breedDetails);

@@ -7,7 +7,7 @@ const MyCattle = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-    axios.get('http://localhost:3000/my-cattle',{
+    axios.get('https://cattle-management-ptz0.onrender.com/my-cattle',{
       headers: {
         id: `${localStorage.getItem('id')}`
       }
@@ -27,7 +27,7 @@ const MyCattle = () => {
             className="cursor-pointer bg-white p-4 rounded-xl shadow hover:shadow-lg"
           >
             <img
-              src={`http://localhost:3000/cattle_image/${c.image_id}`}
+              src={`https://cattle-management-ptz0.onrender.com/cattle_image/${c.image_id}`}
               className="w-full h-40 object-cover rounded"
             />
             <p className="font-semibold mt-2">{c.unique_id}</p>

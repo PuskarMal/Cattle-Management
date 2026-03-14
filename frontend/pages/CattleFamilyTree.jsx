@@ -15,7 +15,7 @@ const FamilyTree = ({ tree }) => {
       <div
         className="absolute inset-0 blur-2xl scale-110 opacity-25"
         style={{
-          backgroundImage: `url(http://localhost:3000/cattle_image/${tree.image_id})`,
+          backgroundImage: `url(https://cattle-management-ptz0.onrender.com/cattle_image/${tree.image_id})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
