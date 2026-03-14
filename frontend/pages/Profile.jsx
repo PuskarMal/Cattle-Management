@@ -1,64 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("id");
-    console.log(storedUser)
-    const token = localStorage.getItem("token");
-
-    if (!storedUser || !token) {
-      alert("Please login first");
-      window.location.href = "/login";
-      return;
-    }
-
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get(
-          `https://cattle-management-ptz0.onrender.com/api/users/profile/${storedUser}`
-        );
-
-        setUser(res.data.user);
-      } catch (error) {
-        console.error("Profile fetch error:", error);
-        alert("Failed to load profile");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("id");
-    window.location.href = "/login";
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-lg">
-        Loading profile...
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-red-500">
-        User not found
-      </div>
-    );
-  }
-
-  const [user, setUser] = useState(null);
+  const [user, setUser] = usaseState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -250,9 +197,8 @@ const Profile = () => {
         </button>
       </div>
     </div>
-  );
-}
-  );
+    </div>
+)
 };
 
 export default Profile;
