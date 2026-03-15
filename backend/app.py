@@ -10,7 +10,7 @@ from tensorflow.keras.preprocessing import image
 app = Flask(__name__)
 CORS(app)
 
-model = tf.keras.models.load_model("../backend/models/model.h5")
+model = tf.keras.models.load_model("https://drive.google.com/file/d/1ARGD8WLtRoHFRqO1_Ccaqpb149zWIL3k/view?usp=sharing")
 
 CLASS_NAMES = [
     "Alambadi","Amritmahal","Ayrshire","Banni","Bargur","Bhadawari",
@@ -57,7 +57,7 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 
-disease_model = tf.keras.models.load_model("../backend/models/best_densenet_cattle.keras")
+disease_model = tf.keras.models.load_model("https://drive.google.com/file/d/1xtboJCFe70UYk0q69cOC1QylyX-pOZwv/view?usp=drive_link")
 
 DISEASE_CLASSES = ["Foot and Mouth", "Healthy", "Lumpy Disease"]
 
