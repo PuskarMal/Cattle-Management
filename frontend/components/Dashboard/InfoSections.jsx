@@ -8,7 +8,7 @@ const InfoSections = () => {
     axios.get("https://cattle-management-ptz0.onrender.com/reports").then(res => setReports(res.data));
   }, [])
   return (
-    <section className="mt-16 space-y-16 ">
+    <section className="lg:mt-16 space-y-16 ">
 
       {/* HOW IT WORKS */}
       <section className="bg-white/80 backdrop-blur rounded-2xl p-8 shadow-lg border border-gray-200">

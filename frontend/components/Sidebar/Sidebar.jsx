@@ -9,7 +9,7 @@ import {
 import React from "react";
 const Sidebar = () => {
   return (
-    <aside className="w-full lg:w-72 h-[120] bg-slate-900 text-slate-100 p-6 flex flex-col justify-between ">
+    <aside className="w-full lg:w-72 h-[120] bg-slate-900 text-slate-100 p-6 flex flex-col justify-between hidden lg:block">
 
       {/* TOP */}
       <div className="space-y-8 shadow-xl">

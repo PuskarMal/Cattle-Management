@@ -34,7 +34,7 @@ const UploadImage = ({onImageReady}) => {
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-xl text-slate-900 font-semibold">{t("uploadphoto")}</span>
+        <span className="text-lg text-slate-900 font-semibold">{t("uploadphoto")}</span>
         <button onClick={() => speakText("uploadphoto")} className="opacity-70 text-xl">🔊</button>
       </div>
 
