@@ -4,3 +4,4 @@ flask
 gunicorn
 pillow
 flask-cors
+uvicorn
