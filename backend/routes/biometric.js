@@ -12,6 +12,7 @@ router.post("/verify-biometric", upload.single("image"), async (req, res) => {
 
     // 1️⃣ Extract biometric features from uploaded image
     const probe = await extractMuzzleFeatures(req.file.buffer);
+    //console.log("Extracted features with confidence:", probe.confidence);
 
     if (probe.confidence < 0.7) {
       return res.status(400).json({ error: "Low quality image" });
@@ -19,6 +20,7 @@ router.post("/verify-biometric", upload.single("image"), async (req, res) => {
 
     // 2️⃣ Fetch cattle having biometric data
     const cattleList = await Cattle.find({ "biometric.features": { $exists: true } });
+    console.log(`Comparing against ${cattleList.length} stored biometrics`);
 
     let bestMatch = null;
     let bestScore = 0;
@@ -29,6 +31,7 @@ router.post("/verify-biometric", upload.single("image"), async (req, res) => {
         probe.features,
         cattle.biometric.features
       );
+      console.log(`Similarity with ${cattle.unique_id}:`, score.toFixed(4));
 
       if (score > bestScore) {
         bestScore = score;

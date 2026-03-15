@@ -174,7 +174,10 @@ router.post(
   async (req, res) => {
     try {
       const { unique_id } = req.params;
+      
       const cattle = await Cattle.findOne({ unique_id });
+      
+      
       if (!cattle) {
         return res.json({ message: "Cattle not found" });
       }
@@ -186,6 +189,7 @@ router.post(
         }
         // 🔹 Step 1: Extract biometric features
         const { features, confidence } = await extractMuzzleFeatures(req.file.buffer);
+        console.log(`Extracted features with confidence: ${confidence.toFixed(4)}`);
 
         // 🔹 Step 2: Store in schema
         cattle.biometric = {

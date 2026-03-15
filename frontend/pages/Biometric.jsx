@@ -28,7 +28,7 @@ export default function Biometric() {
       setLoading(true);
 
       const res = await axios.post(
-        `https://cattle-management-ptz0.onrender.com/link-biometric/${id}`,
+        `http://localhost:3000/link-biometric/${id}`,
         formData,
         {
           headers: {
@@ -50,9 +50,10 @@ export default function Biometric() {
     formData.append("image", image);
 
     const res = await axios.post(
-      "https://cattle-management-ptz0.onrender.com/verify-biometric",
+      "http://localhost:3000/verify-biometric",
       formData
     );
+    console.log("Verification response:", res.data);
 
     alert(
       res.data.verified

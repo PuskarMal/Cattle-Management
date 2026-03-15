@@ -95,12 +95,14 @@ const BreedAnalytics = () => {
       try {
         const formData = new FormData();
         formData.append("image", state.imageFile);
-        const result = await fetch("https://breed-classification-cs1z.onrender.com/predict-disease", {
+        const result = await fetch("http://localhost:5000/predict-disease", {
           method: "POST",
           body: formData
         });
+        console.log(result)
 
         const diseasedata = await result.json();
+        console.log(diseasedata)
         setDisease(diseasedata)
         const chart = Object.entries(diseasedata.all_probabilities).map(
           ([name, value]) => ({
@@ -110,7 +112,7 @@ const BreedAnalytics = () => {
         );
         setChartData(chart)
         const res = await fetch(
-          "https://breed-classification-cs1z.onrender.com/predict-breed",
+          "http://localhost:5000/predict-breed",
           { method: "POST", body: formData }
         );
         const data = await res.json();
