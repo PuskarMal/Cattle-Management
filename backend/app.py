@@ -8,7 +8,7 @@ from io import BytesIO
 from tensorflow.keras.preprocessing import image
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://localhost:5173"])
 
 model = None
 disease_model = None
