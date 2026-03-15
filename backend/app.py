@@ -5,7 +5,7 @@ import numpy as np
 import os
 from PIL import Image
 from io import BytesIO
-import requests
+
 from tensorflow.keras.preprocessing import image
 
 app = Flask(__name__)
