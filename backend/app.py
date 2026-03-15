@@ -34,11 +34,13 @@ def load_models():
 
     if model is None:
         print("Loading breed model...")
-        model = tf.keras.models.load_model("model.h5")
+        model = tf.keras.models.load_model("model.h5",compile=False)
+        model.save("model.keras")
+        model = tf.keras.models.load_model("model.keras",compile=False)
 
     if disease_model is None:
         print("Loading disease model...")
-        disease_model = tf.keras.models.load_model("model2.keras")
+        disease_model = tf.keras.models.load_model("model2.keras",compile=False)
 
 
 def preprocess_image_from_bytes(image_bytes):
@@ -127,5 +129,5 @@ def predict_disease():
         return jsonify({"error": str(e)}), 500
     
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    
+    app.run(debug=True)

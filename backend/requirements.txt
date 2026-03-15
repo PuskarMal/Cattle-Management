@@ -3,8 +3,4 @@ numpy==1.23.5
 flask
 gunicorn
 pillow
-<<<<<<< HEAD
 flask-cors
-=======
-flask-cors
->>>>>>> 0c0ef504fc97952e7cce2c60e0baf93c6efd76ee
