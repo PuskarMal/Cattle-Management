@@ -151,7 +151,7 @@ const RegisterCattle = () => {
     const response = await fetch(
       `https://cattle-management-ptz0.onrender.com/download-report/${unique_id}`
     );
-    
+
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -162,34 +162,61 @@ const RegisterCattle = () => {
     a.remove();
   }
   const analyzeImage = async () => {
-    if (!imageFile) {
-      alert("Please upload an image first");
+  if (!imageFile) {
+    alert("Please upload an image first");
+    return;
+  }
+
+  try {
+
+    const breedForm = new FormData();
+    breedForm.append("image", imageFile);
+
+    const breedRes = await fetch(
+      "https://breed-classification-cs1z.onrender.com/predict-breed",
+      {
+        method: "POST",
+        body: breedForm
+      }
+    );
+
+    const breedData = await breedRes.json();
+    console.log("Breed API:", breedData);
+
+    setResult(breedData);
+
+    if (!breedData.top_predictions?.length) {
+      console.error("Breed prediction failed");
       return;
     }
-    const formData = new FormData();
-    formData.append("image", imageFile);
-    try {
-      const res = await fetch("https://cattle-management-ptz0.onrender.com/predict-breed", {
+
+    const diseaseForm = new FormData();
+    diseaseForm.append("image", imageFile);
+
+    const diseaseRes = await fetch(
+      "https://breed-classification-cs1z.onrender.com/predict-disease",
+      {
         method: "POST",
-        body: formData
-      });
-      const data = await res.json();
-      setResult(data);
-      const result = await fetch("https://cattle-management-ptz0.onrender.com/predict-disease", {
-        method: "POST",
-        body: formData
-      });
-      const diseasedata = await result.json();
-      setDisease(diseasedata)
-      const breedDetailsRes = await fetch(
-        `https://cattle-management-ptz0.onrender.com/predict/fetch_details/${data.top_predictions[0].breed}`
-      );
-      const breedDetail = await breedDetailsRes.json();
-      setBreedDetails(breedDetail.description);
-    } catch (err) {
-      console.error("Analyze image failed:", err);
-    }
-  };
+        body: diseaseForm
+      }
+    );
+
+    const diseaseData = await diseaseRes.json();
+    console.log("Disease API:", diseaseData);
+
+    setDisease(diseaseData);
+
+    const breedDetailsRes = await fetch(
+      `https://cattle-management-ptz0.onrender.com/predict/fetch_details/${breedData.top_predictions[0].breed}`
+    );
+
+    const breedDetail = await breedDetailsRes.json();
+    setBreedDetails(breedDetail.description);
+
+  } catch (err) {
+    console.error("Analyze image failed:", err);
+  }
+};
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;

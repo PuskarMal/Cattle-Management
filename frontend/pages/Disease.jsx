@@ -64,13 +64,13 @@ const Disease = () => {
         formData.append("image", imageFile);
 
         const result = await fetch(
-          "https://cattle-management-ptz0.onrender.com/predict-disease",
+          "https://breed-classification-cs1z.onrender.com/predict-disease",
           { method: "POST", body: formData }
         );
 
         const data = await result.json();
 
-        setDisease(data);
+        console.log(data);
 
         if (data?.all_probabilities) {
           const chart = Object.entries(data.all_probabilities).map(

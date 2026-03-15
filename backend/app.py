@@ -50,19 +50,23 @@ def preprocess_image_from_bytes(image_bytes):
 
 @app.route("/")
 def home():
+    
     return "SAMRIDHI AI API Running"
 
 
 @app.route("/predict-breed", methods=["POST"])
-def predict():
-    try:
 
+def predict():
+    
+    try:
+        
         load_models()
 
         if "image" not in request.files:
             return jsonify({"error": "Image not found"}), 400
-
+        
         image_bytes = request.files["image"].read()
+        
         img = preprocess_image_from_bytes(image_bytes)
 
         preds = model.predict(img, verbose=0)[0]
@@ -85,38 +89,43 @@ def predict():
 @app.route("/predict-disease", methods=["POST"])
 def predict_disease():
     try:
-
-        load_models()
+        print("---- /predict-disease endpoint called ----")
 
         if "image" not in request.files:
+            print("Image missing in request")
             return jsonify({"error": "Image missing"}), 400
 
+        print("Image received")
+
         image_bytes = request.files["image"].read()
+        print("Image size:", len(image_bytes))
 
         h, w = disease_model.input_shape[1], disease_model.input_shape[2]
+        print("Model input shape:", h, w)
 
         img = Image.open(BytesIO(image_bytes)).convert("RGB")
         img = img.resize((w, h))
+        print("Image resized")
+
         img_arr = image.img_to_array(img) / 255.0
         img_arr = np.expand_dims(img_arr, axis=0)
+        print("Image array shape:", img_arr.shape)
 
         preds = disease_model.predict(img_arr, verbose=0)[0]
+        print("Predictions:", preds)
+
         idx = int(np.argmax(preds))
+        print("Predicted index:", idx)
 
         return jsonify({
             "disease": DISEASE_CLASSES[idx],
-            "confidence": round(float(preds[idx]) * 100, 2),
-            "all_probabilities": {
-                DISEASE_CLASSES[i]: round(float(preds[i]) * 100, 2)
-                for i in range(len(DISEASE_CLASSES))
-            }
+            "confidence": round(float(preds[idx]) * 100, 2)
         })
 
     except Exception as e:
-        print("Disease prediction error:", str(e))
+        print("ERROR OCCURRED:", str(e))
         return jsonify({"error": str(e)}), 500
-
-
+    
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
