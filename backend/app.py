@@ -5,12 +5,22 @@ import numpy as np
 import os
 from PIL import Image
 from io import BytesIO
+import requests
 from tensorflow.keras.preprocessing import image
 
 app = Flask(__name__)
 CORS(app)
 
-model = tf.keras.models.load_model("https://drive.google.com/file/d/1ARGD8WLtRoHFRqO1_Ccaqpb149zWIL3k/view?usp=sharing")
+
+import gdown
+
+
+file_id = "1ARGD8WLtRoHFRqO1_Ccaqpb149zWIL3k"
+url = f"https://drive.google.com/uc?id={file_id}"
+
+gdown.download(url, "model.h5", quiet=False)
+
+model = tf.keras.models.load_model("model.h5")
 
 CLASS_NAMES = [
     "Alambadi","Amritmahal","Ayrshire","Banni","Bargur","Bhadawari",
@@ -57,8 +67,14 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 
-disease_model = tf.keras.models.load_model("https://drive.google.com/file/d/1xtboJCFe70UYk0q69cOC1QylyX-pOZwv/view?usp=drive_link")
 
+
+file_id = "1xtboJCFe70UYk0q69cOC1QylyX-pOZwv"
+url = f"https://drive.google.com/uc?id={file_id}"
+
+gdown.download(url, "model2.keras", quiet=False)
+
+disease_model = tf.keras.models.load_model("model2.keras")
 DISEASE_CLASSES = ["Foot and Mouth", "Healthy", "Lumpy Disease"]
 
 
