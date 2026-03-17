@@ -99,10 +99,10 @@ const BreedAnalytics = () => {
           method: "POST",
           body: formData
         });
-        console.log(result)
+        
 
         const diseasedata = await result.json();
-        console.log(diseasedata)
+        
         setDisease(diseasedata)
         const chart = Object.entries(diseasedata.all_probabilities).map(
           ([name, value]) => ({
