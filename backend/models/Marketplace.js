@@ -61,7 +61,7 @@ const MarketplaceSchema = new mongoose.Schema(
     }
   },
   {
-    collection: 'marketplace_listings'
+    collection: 'marketplace_listing'
   }
 );
 
