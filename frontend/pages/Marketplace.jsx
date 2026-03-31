@@ -30,6 +30,9 @@ const SAMRIDHI_MARKETPLACE = () => {
     setCart([...cart, product]);
     alert(`${product.breed_name || product.name} added to cart!`);
   };
+  const seeDetails = (id) => {
+    window.location.href = `/product/${id}`;
+  }
 
   // 2. Filter logic (works with MongoDB field names)
   const filteredProducts = activeCategory === "All" 
@@ -77,7 +80,7 @@ const SAMRIDHI_MARKETPLACE = () => {
           filteredProducts.map((product) => (
             <div
               key={product._id}
-              className="bg-white rounded-xl shadow-sm border p-4 flex flex-col"
+              className="bg-white rounded-xl shadow-sm border p-4 flex flex-col" onClick={()=> seeDetails(product._id)}
             >
               <img
                 src={`https://cattle-management-ptz0.onrender.com${product.image}`}
