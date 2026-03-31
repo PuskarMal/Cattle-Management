@@ -23,6 +23,7 @@ import Help from '../pages/Help'
 import AdminMarketplace from '../pages/AdminMarketPlace'
 import { useDispatch, useSelector } from 'react-redux'
 import { authActions } from './store/auth'
+import ProductDesc from '../pages/ProductDesc'
 
 const App = () => {
   const dispatch = useDispatch();
@@ -61,6 +62,7 @@ const App = () => {
         <Route path="/activity" element={<Activity/>}/> 
         <Route path="/admin-marketplace" element={<AdminMarketplace/>}/>
         <Route path="/help" element={<Help/>}/>
+        <Route path="/product/:id" element={<ProductDesc/>}/>
       </Routes>
 
       <VoicebotLogo/>
