@@ -1,0 +1,14 @@
+Flame Sensor
+DHT11
+MQTT Gas Sensor
+Level Sensor
+L298 Motor Driver
+Toy motor with fan
+SSD1306 OLED display
+DC Water Pump
+Buzzer
+LED
+Push Button
+Breadboard
+Arduino board
+Jumper Wires
