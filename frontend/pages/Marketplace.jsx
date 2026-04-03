@@ -7,7 +7,7 @@ const SAMRIDHI_MARKETPLACE = () => {
   const [loading, setLoading] = useState(true);
 
   const backendURL = "https://cattle-management-ptz0.onrender.com"; // Your server URL
-  const categories = ['All','Nutrition', 'Health', 'Hardware', 'Breeding']
+  const categories = ['All','Nutrition', 'Health', 'Hardware',]
 
   // 1. Fetch products from MongoDB on page load
   useEffect(() => {
@@ -83,13 +83,13 @@ const SAMRIDHI_MARKETPLACE = () => {
               className="bg-white rounded-xl shadow-sm border p-4 flex flex-col" onClick={()=> seeDetails(product._id)}
             >
               <img
-                src={`https://cattle-management-ptz0.onrender.com${product.image}`}
+                src={product.image}
                 alt={product.name || product.breed_name}
                 className="h-40 object-cover rounded-md mb-3"
               />
 
               <h3 className="font-semibold text-lg">
-                {product.name}
+                {product.breed_name}
               </h3>
 
               <p className="text-sm text-gray-600 mb-2">
