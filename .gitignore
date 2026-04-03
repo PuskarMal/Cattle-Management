@@ -1,3 +1,6 @@
 backend/models/complete_muzzle_model.pt
 backend/models/model.h5
 backend/models/best_densenet_cattle.keras
+frontend/dist/htaccess.txt
+frontend/dist/_redirects
+frontend/dist/htaccess.txt
