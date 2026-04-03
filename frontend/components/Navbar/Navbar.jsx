@@ -91,6 +91,7 @@ const Navbar = ({ isAdmin }) => {
           </select>
 
           {/* Profile Icon */}
+          {isLoggedIn && (
           <a
             className="hidden md:flex items-center justify-center h-9 w-9 rounded-full bg-gray-100 hover:bg-gray-200 transition"
             aria-label="User profile" href="/profile"
@@ -103,6 +104,7 @@ const Navbar = ({ isAdmin }) => {
                 c-3.3 0-9 1.7-9 5v2h18v-2c0-3.3-5.7-5-9-5z" />
             </svg>
           </a>
+          )}
 
         </div>
       </div>
