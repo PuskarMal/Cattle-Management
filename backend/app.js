@@ -35,6 +35,8 @@ const user = require("./routes/user.js");
 const family = require("./routes/familyTree.js")
 const cattleRoute = require("./routes/cattle.js");
 const productRoute = require("./routes/productRoutes.js");
+const vaccinationRoute = require("./routes/vaccination.js");
+
 const path = require("path");
 
 app.use("/", cattleRoute);
@@ -48,6 +50,7 @@ app.use("/",report);
 app.use("/",biometric)
 app.use("/",family)
 app.use("/api/products", productRoute);
+app.use("/vaccination", vaccinationRoute);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(process.env.PORT || 3000, () => {
