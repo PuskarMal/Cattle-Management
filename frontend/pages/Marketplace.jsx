@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
+import { BsDatabaseAdd } from "react-icons/bs";
+import {Link} from 'react-router-dom';
 const SAMRIDHI_MARKETPLACE = () => {
   const [cart, setCart] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
@@ -8,6 +9,7 @@ const SAMRIDHI_MARKETPLACE = () => {
 
   const backendURL = "https://cattle-management-ptz0.onrender.com"; // Your server URL
   const categories = ['All','Nutrition', 'Health', 'Hardware',]
+  const role = localStorage.getItem('role'); // Get user role from localStorage
 
   // 1. Fetch products from MongoDB on page load
   useEffect(() => {
@@ -40,11 +42,12 @@ const SAMRIDHI_MARKETPLACE = () => {
     : products.filter(p => p.listing_type === activeCategory || p.category === activeCategory);
 
   return (
-    <div className="p-6 min-h-screen bg-gray-50">
+    <div className="p-6 min-h-screen max-w-5xl mx-auto  bg-gray-50">
       <h2 className="text-2xl font-semibold mb-6 border-b pb-2">
         Marketplace
       </h2>
-
+      
+      <div className='flex justify-between w-full'>
       {/* Category Tabs */}
       <div className="flex gap-3 mb-6 flex-wrap">
         {categories.map((cat, index) => (
@@ -54,12 +57,21 @@ const SAMRIDHI_MARKETPLACE = () => {
             className={`px-4 py-2 rounded-full text-sm border ${
               activeCategory === cat
                 ? "bg-green-600 text-white"
-                : "bg-white text-gray-700"
+                : "bg-lime-50 text-gray-700 cursor-pointer"
             }`}
           >
             {cat}
           </button>
         ))}
+      </div>
+      <div>
+      {role == "admin" && (
+      <Link to= "/admin-marketplace" className='flex gap-3 text-blue-600 font-semibold text-lg bg-blue-100 hover:bg-blue-300 hover:text-white cursor-pointer rounded-xl px-6 py-2'>
+        <BsDatabaseAdd className='text-2xl'/> 
+        New Product
+        </Link>
+      )}
+      </div>
       </div>
 
       {/* Loading */}
