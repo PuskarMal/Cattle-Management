@@ -8,7 +8,7 @@ export default function Biometric() {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null)
-  const [iden, setIden] = useState(null);
+  
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -131,9 +131,10 @@ export default function Biometric() {
             />
           </div>
         </div>
-
+        
         {/* Buttons */}
         <div className="flex gap-3 pt-4">
+
           <button
             onClick={handleVerify}
             disabled={loading}
@@ -143,7 +144,7 @@ export default function Biometric() {
           >
             {loading ? "Verifying..." : "Verify Biometric"}
           </button>
-
+          {id && (
           <button
             onClick={handleSubmit}
             disabled={loading}
@@ -153,6 +154,7 @@ export default function Biometric() {
           >
             {loading ? "Submitting..." : "Submit Biometric"}
           </button>
+          )}
         </div>
       </div>
     </div>
