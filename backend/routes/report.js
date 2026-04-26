@@ -7,6 +7,7 @@ const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
 const router = require("express").Router()
 const Report = require("../models/report.js");
 const Activity = require("../models/activity.js");
+const Disrict = require("../models/district.js");
 
 router.get("/download-report/:unique_id", async (req, res) => {
   try {
@@ -83,5 +84,51 @@ router.get("/recent-activity", async (req, res) => {
   }
 });
 
+router.put("/reports/:id/status", async (req, res) => {
+  try {
+    const reportId = req.params.id;
+    const newStatus = req.body.status;
+    const reported = await Report.findById(reportId);
+    const cattle = await Cattle.findById(reported.cattle_id);
 
+    cattle.status = newStatus;
+    const location = req.body.type|| reported.rural_urban;
+    if (newStatus === "Active"){
+      
+        const districtData = await Disrict.findOne({ districtName: cattle.district.toUpperCase(), Type:location });
+        
+        if  (cattle.species == "Cow"){
+        if (cattle.gender == "Male")
+          districtData.IndigMale+=1;
+        else
+          districtData.IndigFemale+=1;
+        }
+        else{
+          if (cattle.gender == "Male")
+            districtData.BuffaloMale+=1;
+          else
+            districtData.BuffaloFemale+=1;
+        }
+        await districtData.save();
+        
+      }
+      
+    await cattle.save();
+    const report = await Report.findByIdAndUpdate(
+      reportId,
+      { status: newStatus, rural_urban: location},
+      { new: true }
+    );
+    if (!report) {
+      return res.status(404).json({ error: "Report not found" });
+    }
+
+    res.json(report);
+  }
+   catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update report status" });
+  }
+});
+  
 module.exports = router;
