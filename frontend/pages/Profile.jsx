@@ -5,11 +5,11 @@ import axios from "axios";
 const Profile = () => {
   
 
-  const [user, setUser] = usaseState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedUser = localStorage.getItem("id");
     const token = localStorage.getItem("token");
 
     if (!storedUser || !token) {
@@ -21,7 +21,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const res = await axios.get(
-          `https://cattle-management-ptz0.onrender.com/api/users/profile/${storedUser._id}`,
+          `http://localhost:3000/api/users/profile/${storedUser}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -164,39 +164,7 @@ const Profile = () => {
         </button>
 
       </div>
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-xl mx-auto bg-white shadow-lg rounded-xl p-6">
-        <h2 className="text-2xl font-bold mb-6 border-b pb-2">
-          My Profile
-        </h2>
-
-        <div className="space-y-4">
-          <div>
-            <p className="text-gray-500">Name</p>
-            <p className="text-lg font-medium">{user.name}</p>
-          </div>
-
-          <div>
-            <p className="text-gray-500">Email</p>
-            <p className="text-lg font-medium">{user.email}</p>
-          </div>
-
-          {user.phone && (
-            <div>
-              <p className="text-gray-500">Phone</p>
-              <p className="text-lg font-medium">{user.phone}</p>
-            </div>
-          )}
-        </div>
-
-        <button
-          onClick={handleLogout}
-          className="mt-8 w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition duration-300"
-        >
-          Logout
-        </button>
-      </div>
-    </div>
+    
     </div>
 )
 };
