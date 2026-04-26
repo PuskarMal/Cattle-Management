@@ -7,6 +7,7 @@ import {
   LayoutDashboard
 } from "lucide-react";
 import React from "react";
+import { Link } from "react-router-dom";
 const Sidebar = () => {
   return (
     <aside className="w-full lg:w-72 h-[120] bg-slate-900 text-slate-100 p-6 flex flex-col justify-between hidden lg:block">
@@ -39,7 +40,7 @@ const Sidebar = () => {
         <nav className="space-y-2 pt-6 border-t border-slate-700">
           <NavItem icon={<LayoutDashboard />} label="Dashboard" />
           <NavItem icon={<HeartPulse />} label="Health Records" />
-          <NavItem icon={<Syringe />} label="Vaccinations" />
+          <Link to="/vaccination"><NavItem icon={<Syringe />} label="Vaccinations" /></Link>
           <NavItem icon={<Bell />} label="Alerts" />
         </nav>
       </div>
