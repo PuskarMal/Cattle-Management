@@ -7,9 +7,9 @@ const { updateMany } = require('../models/cattle');
 // POST /api/users/register
 router.post('/register', async (req, res) => {
   try {
-    const { full_name, email, password, phone_number, role, mother_tongue, location } = req.body;
+    const { full_name, user_id, phone_number, email, password,  role, mother_tongue, location } = req.body;
 
-    if (!full_name || !email || !password || !phone_number || !mother_tongue || !location?.state || !location?.district || !location?.village) {
+    if (!full_name || !email || !password || !phone_number || !location?.state || !location?.district) {
       return res.status(400).json({ error: 'All fields required (full_name, email, password, phone, mother_tongue, location)' });
     }
 
@@ -21,16 +21,16 @@ router.post('/register', async (req, res) => {
 
     // 2️⃣ Create new user (model auto-hashes password)
     const newUser = new User({ 
-      full_name,  // Replaces username
-      email, 
-      password,  // Hashed via pre-save hook
-      phone_number,
-      role: role || 'farmer',
-      mother_tongue,
+      full_name,
       user_id,
+      phone_number,
+      email, 
+      password,
+      role: role || 'user',
+      mother_tongue,
       location  // Nested: { state, district, village }
     });
-
+    console.log(newUser);
     // 3️⃣ Save to DB (like newCattle.save())
     await newUser.save();
 
@@ -74,7 +74,6 @@ router.post('/login', async (req, res) => {
       { id: user.user_id },
       { role: user.role },
     ];
-    console.log("Auth Claims:", authClaims);
 
     const token = jwt.sign({ authClaims }, process.env.JWT_SECRET || "lms123", {
       expiresIn: "2d",
@@ -84,8 +83,11 @@ router.post('/login', async (req, res) => {
     return res.status(200).json({
       id: user.user_id,
       role: user.role,
-      token
+      token,
+      user: user._id,
+      district: user.location?.district || null
     });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Login failed' });
