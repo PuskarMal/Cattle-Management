@@ -16,13 +16,15 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://cattle-management-ptz0.onrender.com/api/users/login', formData);
-      
+      const res = await axios.post('http://localhost:3000/api/users/login', formData);
+      console.log(res);
       dispatch(authActions.login());
         dispatch(authActions.changeRole(res.data.role));
         localStorage.setItem("id", res.data.id);
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("role", res.data.role);
+        localStorage.setItem("user", res.data.user);
+        localStorage.setItem("district", res.data.district);
         
       const data = res.data;
       if (data) {
@@ -97,7 +99,7 @@ const Login = () => {
 
         {message && (
           <div className={`mt-4 p-4 rounded-md `}>
-            <p dangerouslySetInnerHTML={{ __html: message }} />
+            Unsuccessful login attempt. Please check your credentials and try again.
           </div>
         )}
 
