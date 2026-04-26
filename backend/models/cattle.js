@@ -70,6 +70,7 @@ const cattleSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User" // admin
   },
+  status: { type: String, enum: ["Pending","Active","Rejected"], default: "Pending" },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 });
