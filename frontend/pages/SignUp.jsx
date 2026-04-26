@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {useNavigate} from 'react-router-dom';
 import stateDistricts from '../src/data/statedistricts.json'; // Import the state-district mapping
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ const Signup = () => {
   });
   const [selectedState, setSelectedState] = useState(''); // For dynamic districts
   const [message, setMessage] = useState('');
-
+  const navigate = useNavigate();
   // 22 Official Languages of India (Schedule VIII)
   const officialLanguages = [
     'Assamese', 'Bengali', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kannada', 'Kashmiri',
@@ -35,8 +36,6 @@ const Signup = () => {
     'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh',
     'Uttarakhand', 'West Bengal'
   ];
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,7 +60,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://cattle-management-ptz0.onrender.com/api/users/register', {
+      const res = await fetch('http://localhost:3000/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -74,12 +73,13 @@ const Signup = () => {
           email: '',
           password: '',
           phone_number: '',
-          role: 'farmer',
+          role: 'user',
           location: { state: '', district: '', village: '' },
           mother_tongue: '',
           user_id:''
         }); // Clear form
         setSelectedState(''); // Reset state selection
+        navigate('/login');
       } else {
         setMessage(`Error: ${data.error || 'Signup failed'}`);
       }
@@ -162,9 +162,8 @@ const Signup = () => {
                 className="appearance-none relative block w-full px-3 py-3 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm bg-white"
               >
                 <option value="">Select User Type</option>
-                <option value="farmer">Owner</option>
+                <option value="user">Owner</option>
                 <option value="vet">Vetenerian</option>
-                <option value="admin">Admin</option>
               </select>
             </div>
             <div>
@@ -172,7 +171,6 @@ const Signup = () => {
                 name="mother_tongue"
                 value={formData.mother_tongue}
                 onChange={handleChange}
-                required
                 className="appearance-none relative block w-full px-3 py-3 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm bg-white"
               >
                 <option value="">Select Mother Tongue</option>
@@ -217,7 +215,7 @@ const Signup = () => {
                 placeholder="Village"
                 value={formData.location.village}
                 onChange={handleChange}
-                required
+
                 className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
               />
             </div>
