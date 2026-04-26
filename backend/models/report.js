@@ -27,11 +27,18 @@ const reportSchema = new mongoose.Schema(
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
+  status:{
+    type: String,
+    enum: ["Pending", "Active", "Rejected"],
+    default: "Pending"
+  },
 
     breed_name: String,
     state: String,
-    district: String
+    district: String,
+    rural_urban: String
   },
+  
   { timestamps: true }
 );
 
