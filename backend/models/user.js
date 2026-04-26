@@ -8,20 +8,24 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   full_name: { type: String, required: true }, // e.g., "Ramesh Kumar"
-  role: { type: String, enum: ['farmer', 'vet', 'admin'], default: 'farmer' },
+  role: { type: String, enum: ['user', 'vet', 'admin'], default: 'user' },
   phone_number: { type: String, required: true }, // e.g., "+91XXXXXXXX"
-  mother_tongue: { type: String, required: true }, // e.g., "Bengali"
+  mother_tongue: { type: String }, // e.g., "Bengali"
   location: {
     state: { type: String, required: true }, // e.g., "Gujarat"
     district: { type: String, required: true }, // e.g., "Junagadh"
-    village: { type: String, required: true } // e.g., "Manbazar"
+    village: { type: String } // e.g., "Manbazar"
   },
   cattle: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "cattle_masters"
   }],
   password: { type: String, required: true }, // Hashed
-  email: { type: String, required: true, unique: true } // For login
+  email: { type: String, required: true, unique: true }, // For login
+  vaccination_events: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "vaccinations"
+  }]
 }, { timestamps: true }); // Auto-add createdAt/updatedAt
 
 // Hash password before saving
