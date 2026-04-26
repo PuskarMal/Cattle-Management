@@ -24,6 +24,7 @@ import AdminMarketplace from '../pages/AdminMarketPlace'
 import { useDispatch, useSelector } from 'react-redux'
 import { authActions } from './store/auth'
 import ProductDesc from '../pages/ProductDesc'
+import VaccinationEvents from '../pages/Vaccination'
 
 const App = () => {
   const dispatch = useDispatch();
@@ -63,6 +64,7 @@ const App = () => {
         <Route path="/admin-marketplace" element={<AdminMarketplace/>}/>
         <Route path="/help" element={<Help/>}/>
         <Route path="/product/:id" element={<ProductDesc/>}/>
+        <Route path="/vaccination" element={<VaccinationEvents/>}/>
       </Routes>
 
       <VoicebotLogo/>
