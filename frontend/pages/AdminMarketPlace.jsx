@@ -46,7 +46,7 @@ const AdminMarketplace = () => {
             
             <select className="w-full p-4 bg-gray-50 border rounded-2xl"
                     value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
-              <option>Nutrition</option><option>Health</option><option>Hardware</option><option>Breeding</option>
+              <option>Nutrition</option><option>Health</option><option>Hardware</option>
             </select>
 
             <input type="number" placeholder="Price in ₹" className="w-full p-4 bg-gray-50 border rounded-2xl"
