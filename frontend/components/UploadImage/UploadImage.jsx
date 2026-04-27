@@ -55,7 +55,7 @@ const UploadImage = ({onImageReady}) => {
 
             <button
               type="button"
-              className="py-2 px-4 text-sm font-semibold rounded-full bg-gray-600 hover:bg-gray-200 hover:text-gray-900 cursor-pointer"
+              className="py-2 px-4 text-sm text-white font-semibold rounded-full bg-gray-600 hover:bg-gray-200 hover:text-gray-900 cursor-pointer"
             >
               {t("upload")}
             </button>
