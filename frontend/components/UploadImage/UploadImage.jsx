@@ -34,7 +34,7 @@ const UploadImage = ({onImageReady}) => {
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-lg text-slate-900 font-semibold">{t("uploadphoto")}</span>
+        <span className="text-xl font-semibold">{t("uploadphoto")}</span>
         <button onClick={() => speakText("uploadphoto")} className="opacity-70 text-xl">🔊</button>
       </div>
 
@@ -55,7 +55,7 @@ const UploadImage = ({onImageReady}) => {
 
             <button
               type="button"
-              className="py-2 px-4 text-sm text-white font-semibold rounded-full bg-gray-600 hover:bg-gray-200 hover:text-gray-900 cursor-pointer"
+              className="py-2 px-4 text-sm font-semibold rounded-full bg-gray-200 hover:bg-gray-300 cursor-pointer"
             >
               {t("upload")}
             </button>
@@ -77,7 +77,7 @@ const UploadImage = ({onImageReady}) => {
           <div className="flex justify-center gap-4 mt-4">
             <button
               onClick={() => fileInputRef.current.click()}
-              className="py-2 px-4 text-sm font-semibold rounded-full bg-cyan-900 text-white hover:bg-cyan-700"
+              className="py-2 px-4 text-sm font-semibold rounded-full bg-gray-200 hover:bg-gray-300"
             >
               Change Image
             </button>

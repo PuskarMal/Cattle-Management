@@ -1,14 +1,11 @@
 import React from "react";
 import logo from "../Navbar/logo.jpeg";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 
 const Navbar = ({ isAdmin }) => {
   const { t, i18n } = useTranslation();
-  const { isLoggedIn, role } = useSelector((state) => state.auth);
 
   return (
-
     <nav className="w-full sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
 
@@ -19,38 +16,14 @@ const Navbar = ({ isAdmin }) => {
 
         {/* Navigation Links */}
         <div className="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
-          <NavLink href="/" label={t("nav.home")} />
-          
-
-          {isLoggedIn && role === "farmer" && (
-            <>
-              <NavLink href="/my-cattle" label={t("nav.myCattle")} />
-              
-            </>
-          )}
-          <NavLink href="/identify" label={t("nav.identify")} />
-          <NavLink href="/marketplace" label={t("nav.marketplace")} />
-
-          {isLoggedIn && role === "admin" && (
-            <>
-              
-            </>
-          )}
-          
-          {isLoggedIn && (
-            <>
-            <NavLink href="/register-cattle" label="Register Cattle" />
-            <NavLink href="/reports" label={t("nav.reports")} />
-            
-            </>
-          )}
-          <NavLink href="/help" label={t("nav.help")} />
-          {!isLoggedIn && (
-            <>
-              <NavLink href="/signup" label="Sign Up" />
-              <NavLink href="/login" label="Login" />
-            </>
-          )}
+          <a href="/" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.home")}</a>
+          <a href="/register-cattle" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.register")}</a>
+          <a href="/my-cattle" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.myCattle")}</a>
+          <a href="/identify" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.identify")}</a>
+          <a href="/marketplace" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.marketplace")}</a>
+          <a href="/reports" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.reports")}</a>
+          <a href="/voicebot" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.voice")}</a>
+          <a href="/help" className="text-cyan-900 hover:text-pink-600 transition">{t("nav.help")}</a>
         </div>
 
         
@@ -66,32 +39,31 @@ const Navbar = ({ isAdmin }) => {
             className="appearance-none border border-gray-300 rounded-md px-3 py-1.5 text-sm
                        focus:outline-none focus:ring-2 focus:ring-primary-green bg-white cursor-pointer"
           >
-            <option value="en">English</option>
-            <option value="hi">हिंदी - Hindi</option>
-            <option value="bn">বাংলা - Bengali</option>
-            <option value="te">తెలుగు - Telugu</option>
-            <option value="mr">मराठी - Marathi</option>
-            <option value="ta">தமிழ் - Tamil</option>
-            <option value="ur">اردو - Urdu</option>
-            <option value="gu">ગુજરાતી - Gujarati</option>
-            <option value="kn">ಕನ್ನಡ - Kannada</option>
-            <option value="ml">മലയാളം - Malayalam</option>
-            <option value="or">ଓଡ଼ିଆ - Odia</option>
-            <option value="pa">ਪੰਜਾਬੀ - Punjabi</option>
-            <option value="as">অসমীয়া - Assamese</option>
-            <option value="ma">मैथिली - Maithili</option>
-            <option value="sa">संस्कृत - Sanskrit</option>
-            <option value="ks">کٲشُر - Kashmiri</option>
-            <option value="ne">नेपाली - Nepali</option>
-            <option value="sd">سنڌي - Sindhi</option>
-            <option value="kok">कोंकणी - Konkani</option>
-            <option value="doi">डोगरी - Dogri</option>
-            <option value="mni">মৈতৈলোন্ - Manipuri</option>
-            <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ - Santali</option>
+            <option value="en">English</option> 
+            <option value="hi">हिंदी (Hindi)</option> 
+            <option value="bn">বাংলা (Bengali)</option> 
+            <option value="te">తెలుగు (Telugu)</option> 
+            <option value="mr">मराठी (Marathi)</option> 
+            <option value="ta">தமிழ் (Tamil)</option> 
+            <option value="ur">اردو (Urdu)</option> 
+            <option value="gu">ગુજરાતી (Gujarati)</option> 
+            <option value="kn">ಕನ್ನಡ (Kannada)</option> 
+            <option value="ml">മലയാളം (Malayalam)</option> 
+            <option value="or">ଓଡ଼ିଆ (Odia)</option> 
+            <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option> 
+            <option value="as">অসমীয়া (Assamese)</option> 
+            <option value="ma">मैथिली (Maithili)</option> 
+            <option value="sa">संस्कृत (Sanskrit)</option> 
+            <option value="ks">کٲشُر (Kashmiri)</option> 
+            <option value="ne">नेपाली (Nepali)</option> 
+            <option value="sd">سنڌي (Sindhi)</option> 
+            <option value="kok">कोंकणी (Konkani)</option> 
+            <option value="doi">डोगरी (Dogri)</option> 
+            <option value="mni">মৈতৈলোন্ (Manipuri)</option> 
+            <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santali)</option>
           </select>
 
           {/* Profile Icon */}
-          {isLoggedIn && (
           <a
             className="hidden md:flex items-center justify-center h-9 w-9 rounded-full bg-gray-100 hover:bg-gray-200 transition"
             aria-label="User profile" href="/profile"
@@ -104,7 +76,6 @@ const Navbar = ({ isAdmin }) => {
                 c-3.3 0-9 1.7-9 5v2h18v-2c0-3.3-5.7-5-9-5z" />
             </svg>
           </a>
-          )}
 
         </div>
       </div>
@@ -113,12 +84,3 @@ const Navbar = ({ isAdmin }) => {
 };
 
 export default Navbar;
-
-const NavLink = ({ href, label }) => (
-  <a
-    href={href}
-    className="relative text-gray-700 hover:text-green-700 transition after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-green-600 hover:after:w-full after:transition-all"
-  >
-    {label}
-  </a>
-);

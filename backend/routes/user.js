@@ -1,15 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const User = require("../models/user"); // Mongoose model (not array!)
-const jwt = require("jsonwebtoken");
-const { updateMany } = require('../models/cattle');
 
 // POST /api/users/register
 router.post('/register', async (req, res) => {
   try {
-    const { full_name, user_id, phone_number, email, password,  role, mother_tongue, location } = req.body;
+    const { full_name, email, password, phone_number, role, mother_tongue, location } = req.body;
 
-    if (!full_name || !email || !password || !phone_number || !location?.state || !location?.district) {
+    if (!full_name || !email || !password || !phone_number || !mother_tongue || !location?.state || !location?.district || !location?.village) {
       return res.status(400).json({ error: 'All fields required (full_name, email, password, phone, mother_tongue, location)' });
     }
 
@@ -21,16 +19,15 @@ router.post('/register', async (req, res) => {
 
     // 2️⃣ Create new user (model auto-hashes password)
     const newUser = new User({ 
-      full_name,
-      user_id,
-      phone_number,
+      full_name,  // Replaces username
       email, 
-      password,
-      role: role || 'user',
+      password,  // Hashed via pre-save hook
+      phone_number,
+      role: role || 'farmer',
       mother_tongue,
       location  // Nested: { state, district, village }
     });
-    console.log(newUser);
+
     // 3️⃣ Save to DB (like newCattle.save())
     await newUser.save();
 
@@ -44,8 +41,7 @@ router.post('/register', async (req, res) => {
         phone_number: newUser.phone_number,
         role: newUser.role,
         mother_tongue: newUser.mother_tongue,
-        location: newUser.location,
-        user_id: newUser.user_id
+        location: newUser.location
       }
     });
   } catch (err) {
@@ -70,24 +66,19 @@ router.post('/login', async (req, res) => {
     }
 
     // 2️⃣ Success response (include new fields)
-    const authClaims = [
-      { id: user.user_id },
-      { role: user.role },
-    ];
-
-    const token = jwt.sign({ authClaims }, process.env.JWT_SECRET || "lms123", {
-      expiresIn: "2d",
+    res.json({
+      message: 'Login successful',
+      user: {
+        id: user._id,
+        full_name: user.full_name,
+        email: user.email,
+        phone_number: user.phone_number,
+        role: user.role,
+        mother_tongue: user.mother_tongue,
+        location: user.location,
+        owned_cattle: user.owned_cattle
+      }
     });
-    
-
-    return res.status(200).json({
-      id: user.user_id,
-      role: user.role,
-      token,
-      user: user._id,
-      district: user.location?.district || null
-    });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Login failed' });
@@ -97,10 +88,10 @@ router.post('/login', async (req, res) => {
 // GET /api/users/profile/:id (updated response to include new fields)
 router.get('/profile/:id', async (req, res) => {
   try {
-    
+    const { id } = req.params;
 
     // 1️⃣ Find in DB
-    const user = await User.findOne({user_id: req.params.id});  // Exclude password
+    const user = await User.findById(id).select('-password');  // Exclude password
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -115,9 +106,7 @@ router.get('/profile/:id', async (req, res) => {
         role: user.role,
         mother_tongue: user.mother_tongue,
         location: user.location,
-        owned_cattle: user.owned_cattle,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt
+        owned_cattle: user.owned_cattle
       }
     });
   } catch (err) {
@@ -125,34 +114,5 @@ router.get('/profile/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch profile' });
   }
 });
-router.get('/profile/me', async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id)
-      .select('-password -__v -createdAt -updatedAt');
-
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-
-    res.json({
-      success: true,
-      user: {
-        id: user._id,
-        full_name: user.full_name,
-        email: user.email,
-        phone_number: user.phone_number,
-        role: user.role,
-        mother_tongue: user.mother_tongue,
-        location: user.location,
-        owned_cattle: user.owned_cattle || []
-      }
-    });
-  } catch (err) {
-    console.error('Self-profile error:', err);
-    res.status(500).json({ success: false, message: 'Server error' });
-  }
-});
-
-
 
 module.exports = router;

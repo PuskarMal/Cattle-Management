@@ -1,190 +1,182 @@
-import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import React from 'react'
+import { useTranslation } from "react-i18next"; //sujit
+import {useNavigate} from "react-router-dom"
 import { ImCheckmark } from "react-icons/im";
-import UploadImage from "../UploadImage/UploadImage";
+import SpeakerButton from '../Speaker/Speaker'; //Sujit
+import UploadImage from '../UploadImage/UploadImage';
 
 const Dashboard = () => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+    const { t, i18n } = useTranslation(); //sujit  
+    const navigate = useNavigate()
 
-  const [activities, setActivities] = useState([]);
-  const [showContent, setShowContent] = useState(false);
+    return (
+        <main id="main-content" className="w-full lg:w-3/4 p-8 bg-gray-100">
 
-  useEffect(() => {
-    const fetchActivities = async () => {
-      try {
-        const res = await fetch("https://cattle-management-ptz0.onrender.com/recent-activity");
-        const data = await res.json();
-        setActivities(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchActivities();
-  }, []);
 
-  const handleVideoProgress = (e) => {
-    const progress = e.target.currentTime / e.target.duration;
-    if (progress > 0.82) setShowContent(true);
-  };
+            <div className="flex flex-col md:flex-row justify-between items-start">
+                <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900" data-i18n="head">
+                            {t("head")}                         {/*Sujit*/}
+                        </h1>
+                        <SpeakerButton textKey="head" />        {/*Sujit*/}
+                    </div>
 
-  return (
-    <main className="w-full p-3 bg-gray-100">
 
-  {/* ================= HERO SECTION ================= */}
-  <div className="relative w-full min-h-[60vh] md:min-h-[50vh] lg:min-h-[55vh] overflow-hidden lg:mb-12 mb-2">
+                    <div className="flex flex-col md:flex-row justify-between items-start mb-6 md:items-center gap-6">
 
-    {/* Video */}
-    <video
-      src="/OIG2.mp4"
-      autoPlay
-      muted
-      playsInline
-      onTimeUpdate={handleVideoProgress}
-      className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000
-      ${showContent ? "scale-110 blur-sm brightness-75" : ""}`}
-    />
 
-    {/* Overlay */}
-    <div className="absolute inset-0 bg-white/10"></div>
+                        <div className="md:w-3/5 space-y-5">
 
-    {/* Content */}
-    <div
-      className={`relative z-10 mx-auto max-w-4xl pb-1
-      p-5 sm:p-6 md:p-8 lg:p-10
-      text-white
-      
-      
-      transition-all duration-1000
-      ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-    >
 
-      {/* Heading */}
-      <h1
-        className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-3
-        bg-gradient-to-r from-green-300 via-emerald-400 to-lime-300
-        bg-[length:200%_auto] bg-clip-text text-transparent
-        animate-[shimmer_4s_linear_infinite] underline"
-      >
-        {t("head")}
-      </h1>
+                            <div className="flex items-start gap-2">
+                                <p className="text-gray-700 text-justify max-w-xl leading-relaxed text-sm md:text-base" data-i18n="desc">
+                                    {t("longtext")}
+                                </p>
+                                <SpeakerButton textKey="longtext" />
+                            </div>
 
-      {/* Description */}
-      <p className="text-sm sm:text-base text-amber-100/90 leading-relaxed max-w-3xl">
-        {t("longtext")}
-      </p>
 
-      {/* Feature Chips */}
-      <div className="flex flex-wrap gap-2 mt-5 text-xs sm:text-sm">
-        {[
-          "Offline-first Architecture",
-          "AI-driven Decision Support",
-          "Government Guideline Aligned",
-          "Farmer-friendly UX",
-        ].map((item, i) => (
-          <span
-            key={i}
-            className="px-3 py-1 rounded-full bg-white/20 border border-white/30
-            backdrop-blur-md whitespace-nowrap
-            animate-[float_4s_ease-in-out_infinite]"
-            style={{ animationDelay: `${i * 0.4}s` }}
-          >
-            {item}
-          </span>
-        ))}
-      </div>
+                            <div className="flex flex-wrap gap-2 text-xs">
+                                <span className="px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                                    Offline-first Architecture
+                                </span>
+                                <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                                    AI-driven Decision Support
+                                </span>
+                                <span
+                                    className="px-3 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+                                    Government Guideline Aligned
+                                </span>
+                                <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                                    Farmer-friendly UX
+                                </span>
+                            </div>
 
-      {/* Checklist */}
-      <ul className="mt-6 space-y-2 sm:space-y-3 text-xs sm:text-sm">
-        {[t("f1"), t("f2"), t("f3"), t("f4")].map((text, i) => (
-          <li
-            key={i}
-            className="flex items-start gap-2 transition hover:translate-x-1"
-          >
-            <span className="text-green-400 animate-pulse">
-              <ImCheckmark />
-            </span>
-            <span>{text}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
 
-  {/* ================= MAIN GRID ================= */}
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-3 lg:px-10 lg:gap-10">
+                            <ul className="space-y-3 text-gray-700 text-sm">
 
-    {/* Upload */}
-    <div className="w-full pt-3">
-      <UploadImage
-        onImageReady={(file) =>
-          navigate("/analytics", { state: { imageFile: file } })
-        }
-      />
-    </div>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600 mt-0.5"><ImCheckmark /></span>
+                                    <span data-i18n="d1">
+                                        {t("f1")}
+                                    </span>
+                                    <button className="opacity-70 text-lg hover:opacity-100"
+                                        title="Listen">🔊</button>
+                                </li>
 
-    {/* Recent Activity */}
-    <section className="space-y-4 pb-5">
-      <div className="flex items-center justify-between ">
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-          {t("recentactivity")}
-        </h2>
-        <a
-          href="/activity"
-          className="text-xs sm:text-sm text-green-600 hover:underline"
-        >
-          {t("viewall")}
-        </a>
-      </div>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600"><ImCheckmark /></span>
+                                    <span data-i18n="d2">
+                                        {t("f2")}
+                                    </span>
+                                    <button className="opacity-70 text-lg hover:opacity-100"
+                                        title="Listen">🔊</button>
+                                </li>
 
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm divide-y">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600 mt-0.5"><ImCheckmark /></span>
+                                    <span data-i18n="d3">
+                                        {t("f3")}
+                                    </span>
+                                    <button className="opacity-70 text-lg hover:opacity-100"
+                                        title="Listen">🔊</button>
+                                </li>
 
-        {activities.map((activity, index) => (
-          <div
-            key={index}
-            className="p-3 sm:p-4 flex items-start gap-3 sm:gap-4
-            transition-all duration-300 hover:bg-green-50 hover:scale-[1.01]"
-          >
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600 mt-0.5"><ImCheckmark /></span>
+                                    <span>
+                                        {t("f4")}
+                                    </span>
+                                </li>
 
-            <div className="flex-shrink-0">
-              <span
-                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center
-                rounded-full bg-green-100 text-green-600"
-              >
-                ➕
-              </span>
+                            </ul>
+                        </div>
+
+
+                        <div className="md:w-2/5 mt-6 md:mt-0 flex justify-end">
+                            <div
+                                className="w-full rounded-xl overflow-hidden shadow-md border border-gray-200 bg-white">
+                                <img src="https://thumbs.dreamstime.com/b/farmer-milking-cow-village-india-koriya-chhattisgarh-india-farmer-taking-out-milk-mother-s-cow-udder-270282390.jpg"
+                                    alt="Rural dairy farming in India" className="w-full h-64 object-cover" />
+                                <div className="px-3 py-2 text-xs text-gray-500 bg-gray-50 border-t">
+                                    {t("caption")}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <UploadImage onImageReady={(file) =>
+                        navigate("/analytics", { state: { imageFile: file } })
+                    } />
+
+
+                    <div id="feedback-message" className="mt-4 text-sm text-center text-gray-600 hidden"></div>
+                </div>
+                <section className="space-y-4 mt-4">
+
+
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xl font-semibold text-gray-800 cursor-pointer">
+                            {t("recentactivity")}
+                        </h2>
+                        <a href="/activity.html" className="text-sm cursor-pointer text-primary-green hover:underline">
+                            {t("viewall")}
+                        </a>
+                    </div>
+
+
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm divide-y">
+
+
+                        <div className="p-4 flex items-start gap-3">
+                            <span className="text-green-600 text-lg">➕</span>
+                            <div>
+                                <p className="text-sm text-gray-800">
+                                    {t("newanimalregistered")}
+                                </p>
+                                <p className="text-xs text-gray-500 hover-underline cursor-pointer hover:text-blue-500">
+                                    C100669110
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="p-4 flex items-start gap-3">
+                            <span className="text-blue-600 text-lg">📷</span>
+                            <div>
+                                <p className="text-sm text-gray-800">
+                                    {t("animalidentified")}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                    C100578424
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="p-4 flex items-start gap-3">
+                            <span className="text-purple-600 text-lg">🧬</span>
+                            <div>
+                                <p className="text-sm text-gray-800">
+                                    {t("genetictestcompleted")}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                    M500677384
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
             </div>
 
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-sm text-gray-800 truncate">
-                {activity.action === "CATTLE_REGISTERED"
-                  ? "Cattle Registered"
-                  : activity.action === "REPORT_GENERATED"
-                  ? "Health Report Generated"
-                  : activity.action === "CATTLE_UPDATED"
-                  ? "Cattle Details Updated"
-                  : activity.action}
-              </p>
 
-              <p className="text-xs sm:text-sm text-gray-500 truncate">
-                {activity.metadata?.breed || "No description"}
-              </p>
-            </div>
+        </main>
+    )
+}
 
-            {activity.entityId?.unique_id && (
-              <span className="text-xs bg-gray-500 px-2 py-1 rounded-lg whitespace-nowrap">
-                #{activity.entityId.unique_id}
-              </span>
-            )}
-          </div>
-        ))}
-
-      </div>
-    </section>
-  </div>
-</main>
-  );
-};
-
-export default Dashboard;
+export default Dashboard

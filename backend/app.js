@@ -7,8 +7,7 @@ require("./config/db.js");
 app.set("view engine", "ejs");
 
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://samridhi1.netlify.app"
+  "http://localhost:5173"
 ];
 initGridFS()
 const corsOptions = {
@@ -33,15 +32,9 @@ const report = require("./routes/report.js")
 const biometric = require("./routes/biometric.js")
 const user = require("./routes/user.js");
 const family = require("./routes/familyTree.js")
-const cattleRoute = require("./routes/cattle.js");
-const productRoute = require("./routes/productRoutes.js");
-const vaccinationRoute = require("./routes/vaccination.js");
+const chatbot = require("./routes/chatbot.js")
 
-const path = require("path");
-
-app.use("/", cattleRoute);
-
-app.use("/api/users", user);
+app.use("/api/users/", user);
 
 app.use("/", registerCattleRoute);
 
@@ -49,9 +42,7 @@ app.use("/predict", predictRoute);
 app.use("/",report);
 app.use("/",biometric)
 app.use("/",family)
-app.use("/api/products", productRoute);
-app.use("/vaccination", vaccinationRoute);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/chatbot", chatbot);
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port http://localhost:${process.env.PORT || 3000}`);

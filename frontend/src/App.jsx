@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react'
-import { Route, Routes } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Route, Routes, Navigate } from 'react-router-dom'
 
 import Navbar from '../components/Navbar/Navbar'
 import Footer from '../components/Footer/Footer'
@@ -16,29 +16,9 @@ import Signup from '../pages/SignUp'
 import Login from '../pages/Login'
 import Disease from '../pages/Disease'
 import "./i18n";
-import Reports from '../pages/Reports'
-import MyCattle from '../pages/MyCattle'
-import Activity from '../pages/Activity'
-import Help from '../pages/Help'
-import AdminMarketplace from '../pages/AdminMarketPlace'
-import { useDispatch, useSelector } from 'react-redux'
-import { authActions } from './store/auth'
-import ProductDesc from '../pages/ProductDesc'
-import VaccinationEvents from '../pages/Vaccination'
 
 const App = () => {
-  const dispatch = useDispatch();
-  const role = useSelector((state) => state.auth.role);
-  useEffect(() => {
-    if (
-        localStorage.getItem("id") &&
-        localStorage.getItem("token") &&
-        localStorage.getItem("role")
-    ){
-      dispatch(authActions.login());
-      dispatch(authActions.changeRole(localStorage.getItem("role")));
-    }
-  }, []);
+
   return (
     <div>
       
@@ -58,13 +38,6 @@ const App = () => {
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path='/disease' element={<Disease/>}/>
-        <Route path="/reports" element={<Reports/>}/>
-        <Route path="/my-cattle" element={<MyCattle/>}/>
-        <Route path="/activity" element={<Activity/>}/> 
-        <Route path="/admin-marketplace" element={<AdminMarketplace/>}/>
-        <Route path="/help" element={<Help/>}/>
-        <Route path="/product/:id" element={<ProductDesc/>}/>
-        <Route path="/vaccination" element={<VaccinationEvents/>}/>
       </Routes>
 
       <VoicebotLogo/>

@@ -2,17 +2,14 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import tensorflow as tf
 import numpy as np
-import os
 from PIL import Image
 from io import BytesIO
-
 from tensorflow.keras.preprocessing import image
 
 app = Flask(__name__)
 CORS(app)
 
-
-model = tf.keras.models.load_model("model.h5")
+model = tf.keras.models.load_model("../backend/models/model.h5")
 
 CLASS_NAMES = [
     "Alambadi","Amritmahal","Ayrshire","Banni","Bargur","Bhadawari",
@@ -59,7 +56,7 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 
-disease_model = tf.keras.models.load_model("model2.keras")
+disease_model = tf.keras.models.load_model("../backend/models/best_densenet_cattle.keras")
 
 DISEASE_CLASSES = ["Foot and Mouth", "Healthy", "Lumpy Disease"]
 
@@ -69,11 +66,11 @@ def predict_disease():
     try:
         if "image" not in request.files:
             return jsonify({"error": "Image missing"}), 400
-        print("Received disease prediction request")
+
         image_bytes = request.files["image"].read()
-        
+
         h, w = disease_model.input_shape[1], disease_model.input_shape[2]
-        
+
         img = Image.open(BytesIO(image_bytes)).convert("RGB")
         img = img.resize((w, h))
         img_arr = image.img_to_array(img) / 255.0
@@ -97,6 +94,4 @@ def predict_disease():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000)) 
-    app.run(host="0.0.0.0", port=port,debug=True)
-    
+    app.run(debug=True)

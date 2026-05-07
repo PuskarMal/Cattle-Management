@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { data, useLocation } from "react-router-dom";
 import TopPrediction from "../components/Charts/TopPrediction";
-import Silage from "../src/assets/fodder/Silage.jpg";
 
 import {
   PieChart,
@@ -16,63 +15,6 @@ const COLORS = {
   "Foot and Mouth": "#ef4444", // red
   "Lumpy Disease": "#f59e0b"   // amber
 };
-const InfoModal = ({ popup, onClose }) => {
-  if (!popup.open) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-
-      {/* Overlay */}
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-xl w-[90%] max-w-md p-6 animate-scaleIn">
-
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
-        >
-          ✕
-        </button>
-
-        {/* Image */}
-        {popup.data.image && (
-          <img
-            src={popup.data.image}
-            alt={popup.data.name}
-            className="w-full h-40 object-cover rounded-xl mb-4"
-          />
-        )}
-
-        {/* Title */}
-        <h3 className={`text-xl font-semibold mb-2
-          ${popup.type === "fodder" ? "text-green-700" : "text-red-700"}`}>
-          {popup.data.name}
-        </h3>
-
-        {/* Description */}
-        <p className="text-sm text-gray-700 leading-relaxed">
-          {popup.data.description}
-        </p>
-
-        {/* Footer */}
-        <div className="mt-4 text-right">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 
 const BreedAnalytics = () => {
   const { state } = useLocation();
@@ -95,14 +37,12 @@ const BreedAnalytics = () => {
       try {
         const formData = new FormData();
         formData.append("image", state.imageFile);
-        const result = await fetch("http://localhost:5000/predict-disease", {
+        const result = await fetch("http://127.0.0.1:5000/predict-disease", {
           method: "POST",
           body: formData
         });
-        
 
         const diseasedata = await result.json();
-        
         setDisease(diseasedata)
         const chart = Object.entries(diseasedata.all_probabilities).map(
           ([name, value]) => ({
@@ -112,13 +52,13 @@ const BreedAnalytics = () => {
         );
         setChartData(chart)
         const res = await fetch(
-          "http://localhost:5000/predict-breed",
+          "http://127.0.0.1:5000/predict-breed",
           { method: "POST", body: formData }
         );
         const data = await res.json();
         setResult(data);
         const breedDetailsRes = await fetch(
-          `https://cattle-management-ptz0.onrender.com/predict/fetch_details/${data.top_predictions[0].breed}`
+          `http://localhost:3000/predict/fetch_details/${data.top_predictions[0].breed}`
         );
         const breedDetails = await breedDetailsRes.json();
         setDetails(breedDetails);
@@ -140,41 +80,12 @@ const BreedAnalytics = () => {
       </p>
     );
   }
-  const [popup, setPopup] = useState({
-  open: false,
-  type: null,     // "fodder" | "disease"
-  data: null
-});
-
-  const handleFooder = (fodder) => {
-  setPopup({
-    open: true,
-    type: "fodder",
-    data: {
-      name: fodder,
-      image: `../src/assets/fodder/${fodder}.jpg`,
-      description: "Improves digestion and milk yield."
-    }
-  });
-};
-
-const handleDisease = (disease) => {
-  setPopup({
-    open: true,
-    type: "disease",
-    data: {
-      name: disease,
-      description: "A common cattle disease requiring timely vaccination."
-    }
-  });
-};
-
 
 
 
 
   return (
-    <div className="p-8 min-h-screen space-y-8 max-w-6xl mx-auto">
+    <div className="p-8 space-y-8 max-w-6xl mx-auto">
 
       {/* HEADER */}
       <div className="flex items-center justify-between">
@@ -340,7 +251,7 @@ const handleDisease = (disease) => {
 
           </div>
 
-         
+          {/* DISEASES */}
           <div className="grid grid-cols-2 gap-8">
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">
@@ -350,7 +261,7 @@ const handleDisease = (disease) => {
                 {details.recommended_feed?.map((f, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 text-md rounded-full bg-green-50 text-green-700 border border-red-200 cursor-pointer" onClick={() => handleFooder(f)}
+                    className="px-3 py-1 text-md rounded-full bg-green-50 text-green-700 border border-red-200"
                   >
                     {f}
                   </span>
@@ -365,7 +276,7 @@ const handleDisease = (disease) => {
                 {details.common_diseases?.map((d, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 text-md rounded-full bg-red-50 text-red-700 border border-red-200 cursor-pointer" onClick={() => handleDisease(d)}
+                    className="px-3 py-1 text-md rounded-full bg-red-50 text-red-700 border border-red-200"
                   >
                     {d}
                   </span>
@@ -374,10 +285,6 @@ const handleDisease = (disease) => {
             </div>
 
           </div>
-          <InfoModal
-  popup={popup}
-  onClose={() => setPopup({ open: false })}
-/>
         </div>
       )}
     </div>
@@ -391,7 +298,5 @@ const InfoCard = ({ label, value }) => (
     <p className="text-lg font-semibold text-gray-800">{value}</p>
   </div>
 );
-
-
 
 export default BreedAnalytics

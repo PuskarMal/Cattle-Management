@@ -8,7 +8,7 @@ export default function Biometric() {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null)
-  
+  const [iden, setIden] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -53,7 +53,6 @@ export default function Biometric() {
       "http://localhost:3000/verify-biometric",
       formData
     );
-    console.log("Verification response:", res.data);
 
     alert(
       res.data.verified
@@ -65,7 +64,7 @@ export default function Biometric() {
     const handleVerifyID = async () => {
     
     const res = await axios.get(
-      `https://cattle-management-ptz0.onrender.com/fetch-cattle-profile/${iden}`,
+      `http://localhost:3000/fetch-cattle-profile/${iden}`,
       
     );
 
@@ -131,10 +130,9 @@ export default function Biometric() {
             />
           </div>
         </div>
-        
+
         {/* Buttons */}
         <div className="flex gap-3 pt-4">
-
           <button
             onClick={handleVerify}
             disabled={loading}
@@ -144,7 +142,7 @@ export default function Biometric() {
           >
             {loading ? "Verifying..." : "Verify Biometric"}
           </button>
-          {id && (
+
           <button
             onClick={handleSubmit}
             disabled={loading}
@@ -154,7 +152,6 @@ export default function Biometric() {
           >
             {loading ? "Submitting..." : "Submit Biometric"}
           </button>
-          )}
         </div>
       </div>
     </div>

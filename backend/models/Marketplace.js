@@ -40,12 +40,6 @@ const MarketplaceSchema = new mongoose.Schema(
       type: String,
       default: 'Cow'
     },
-     specifications: {
-      type: Map,
-      of: String,
-      default: {}
-    },
-    tags:[{type: String}],
 
     // Auto-generated animal ID
     animal_id: {
@@ -67,7 +61,7 @@ const MarketplaceSchema = new mongoose.Schema(
     }
   },
   {
-    collection: 'marketplace_listing'
+    collection: 'marketplace_listings'
   }
 );
 
